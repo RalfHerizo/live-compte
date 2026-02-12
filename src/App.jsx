@@ -5,6 +5,7 @@ function App() {
   const { transactions, setFilterLibelle } = useTransactionManager([
     { id: 1, date: "2026-01-02", libelle: "LOYER", recette: 1000, depense: 0 },
     { id: 2, date: "2026-01-10", libelle: "ENTRETIEN", recette: 0, depense: 500 },
+    { id: 3, date: "2026-01-11", libelle: "LOYER", recette: 4000, depense: 0 },
   ]);
 
   return (
@@ -49,7 +50,7 @@ function App() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {transactions.map((t) => (
+              {transactions.items.map((t) => (
                 <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
                   <td className="px-6 py-4 text-slate-600 whitespace-nowrap">
                     {new Date(t.date).toLocaleDateString('fr-FR')}
@@ -58,13 +59,13 @@ function App() {
                     {t.libelle}
                   </td>
                   <td className="px-6 py-4 text-right text-emerald-600 font-medium">
-                    {t.recette > 0 ? `${t.recette.toLocaleString()} €` : '-'}
+                    {t.recette > 0 ? `${t.recette.toLocaleString()} Ar` : '-'}
                   </td>
                   <td className="px-6 py-4 text-right text-rose-600 font-medium">
-                    {t.depense > 0 ? `${t.depense.toLocaleString()} €` : '-'}
+                    {t.depense > 0 ? `${t.depense.toLocaleString()} Ar` : '-'}
                   </td>
                   <td className="px-6 py-4 text-right font-bold text-slate-900 bg-slate-50/30">
-                    {t.solde.toLocaleString()} €
+                    {t.solde.toLocaleString()} Ar
                   </td>
                 </tr>
               ))}
@@ -73,10 +74,14 @@ function App() {
             <tfoot>
                <tr className="bg-slate-900 text-white font-bold">
                  <td colSpan="2" className="px-6 py-4">TOTAL</td>
-                 <td className="px-6 py-4 text-right">-</td>
-                 <td className="px-6 py-4 text-right">-</td>
+                 <td className="px-6 py-4 text-right">
+                 {transactions.totalRecettes.toLocaleString()} Ar
+                 </td>
+                 <td className="px-6 py-4 text-right">
+                 {transactions.totalDepenses.toLocaleString()} Ar
+                 </td>
                  <td className="px-6 py-4 text-right text-lg">
-                   {transactions.length > 0 ? transactions[transactions.length - 1].solde.toLocaleString() : 0} €
+                 {transactions.soldeFinal.toLocaleString()} Ar
                  </td>
                </tr>
             </tfoot>
