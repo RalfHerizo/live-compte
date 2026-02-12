@@ -13,11 +13,10 @@
       size: A4 portrait; /* ou "A4 portrait" selon votre préférence */
     }
 
-    header  /* boutons de la colonne Actions */
+    header,.no-print  /* boutons de la colonne Actions */
     {
       display: none !important;
     }
-  
     /* 3. Réinitialiser les mises en page "dark" pour l'impression */
     .app {
       max-width: 100%;
