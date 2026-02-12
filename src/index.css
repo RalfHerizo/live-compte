@@ -38,7 +38,7 @@
     }
   
     /* En-tête du tableau : bandeau sombre avec texte doré */
-    thead {
+    thead,tfoot {
       background: #1c1a2e !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
@@ -56,6 +56,10 @@
     /* Répéter l'en-tête du tableau sur chaque page si > 1 page */
     thead {
       display: table-header-group;
+    }
+
+    tfoot td{
+      color: #fff!important;
     }
 
   

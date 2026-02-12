@@ -1,18 +1,26 @@
 import { useState, useMemo } from "react";
-import {computeBalances} from "../core/finance";
+import { computeBalances, filterTransactionsByDate } from "../core/finance";
 
 export const useTransactionManager = (initialData = []) => {
   
   const [transactions, setTransactions] = useState(initialData);
   const [filterLibelle, setFilterLibelle] = useState("");
+  const [dateFilter, setDateFilter] = useState({
+    mode: "all",
+    month: "",
+    from: "",
+    to: "",
+  });
 
   const processedData = useMemo(() => {
-    const filtered = transactions.filter((transaction) =>
+    const filteredByLibelle = transactions.filter((transaction) =>
       transaction.libelle.toLowerCase().includes(filterLibelle.toLowerCase())
     );
 
-    return computeBalances(filtered);
-  }, [transactions, filterLibelle]);
+    const filteredByDate = filterTransactionsByDate(filteredByLibelle, dateFilter);
+
+    return computeBalances(filteredByDate);
+  }, [transactions, filterLibelle, dateFilter]);
 
   const addTransaction = (newTransaction) => {
     const transactionWithId = {
@@ -26,6 +34,8 @@ export const useTransactionManager = (initialData = []) => {
   return {
     transactions: processedData,
     setFilterLibelle,
+    dateFilter,
+    setDateFilter,
     addTransaction,
   };
 };
