@@ -1,1 +1,126 @@
 @import "tailwindcss";
+/* ============================================================
+   IMPRESSION / EXPORT PDF
+   ============================================================ */
+   @media print {
+
+    /* 1. Mise en page de la feuille
+          @page { margin: 0 } pousse les en-têtes automatiques
+          du navigateur (URL, date, numéro de page) hors de la
+          zone visible. On recrée l'espace via body { margin }. */
+    @page {
+      margin: 0;
+      size: A4 portrait; /* ou "A4 portrait" selon votre préférence */
+    }
+
+    header  /* boutons de la colonne Actions */
+    {
+      display: none !important;
+    }
+  
+    /* 3. Réinitialiser les mises en page "dark" pour l'impression */
+    .app {
+      max-width: 100%;
+      padding: 0;
+      background: #ffffff;
+    }  
+    /* 5. Tableau principal */
+    .twrap {
+      border: none;
+      overflow: visible;
+      border-radius: 0;
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+      page-break-inside: auto;
+    }
+  
+    /* En-tête du tableau : bandeau sombre avec texte doré */
+    thead {
+      background: #1c1a2e !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    thead th {
+      padding: 8px 12px;
+      font-size: 9pt;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    /* Répéter l'en-tête du tableau sur chaque page si > 1 page */
+    thead {
+      display: table-header-group;
+    }
+
+  
+    /* Corps du tableau */
+    tbody tr {
+      page-break-inside: avoid; /* évite de couper une ligne en deux pages */
+      border-bottom: 1px solid rgb(221, 221, 221) !important;
+    }
+  
+    tbody tr:nth-child(even) {
+      background: rgb(221, 221, 221) !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    td {
+      padding: 7px 12px;
+      color: #111 !important;
+    }
+  
+    /* Couleurs des colonnes */
+    td.dt {  /* Date */
+      color: #555555 !important;
+      font-style: italic;
+    }
+  
+    td.rv {  /* Recettes — vert */
+      color: #1a6040 !important;
+      font-weight: 600;
+      text-align: right;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    td.dv {  /* Dépenses — rouge */
+      color: #801828 !important;
+      font-weight: 600;
+      text-align: right;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    td.sv {  /* Solde — or */
+      color: #7a5010 !important;
+      font-weight: 600;
+      text-align: right;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    /* Ligne TOTAL */
+    .trow {
+      background: blue !important;
+      border-top: 2px solid blue !important;
+      border-bottom: 2px solid green !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  
+    .trow td {
+      font-size: 11pt;
+      font-weight: 700;
+      padding: 9px 12px;
+    }
+
+    
+  }

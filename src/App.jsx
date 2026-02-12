@@ -13,7 +13,7 @@ function App() {
       <div className="max-w-5xl mx-auto">
         
         {/* Header - Masqué à l'impression */}
-        <header className="flex flex-col justify-between items-center mb-10 gap-4 no-print">
+        <header className=" flex flex-col justify-between items-center mb-10 gap-4 no-print">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
               Live Compte
@@ -25,12 +25,12 @@ function App() {
             <input 
               type="text"
               placeholder="Rechercher un libellé..."
-              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all w-64"
+              className="px-4 py-2 border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all w-64"
               onChange={(e) => setFilterLibelle(e.target.value)}
             />
             <button 
               onClick={() => window.print()}
-              className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm"
+              className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2 font-medium transition-colors shadow-sm"
             >
               Exporter PDF
             </button>
@@ -38,15 +38,15 @@ function App() {
         </header>
 
         {/* Tableau Style "Clean Architecture" */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white  border border-slate-200 overflow-hidden">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="px-6 py-4 text-sm font-semibold text-slate-600 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-4 text-sm font-semibold text-slate-600 uppercase tracking-wider">Libellé</th>
-                <th className="px-6 py-4 text-sm font-semibold text-slate-600 uppercase tracking-wider text-right">Recettes</th>
-                <th className="px-6 py-4 text-sm font-semibold text-slate-600 uppercase tracking-wider text-right">Dépenses</th>
-                <th className="px-6 py-4 text-sm font-semibold text-slate-600 uppercase tracking-wider text-right">Solde</th>
+              <tr className="bg-slate-900 border-b border-slate-200">
+                <th className="px-6 py-4 text-sm font-semibold text-slate-50 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-50 uppercase tracking-wider">Libellé</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-50 uppercase tracking-wider text-right">Recettes</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-50 uppercase tracking-wider text-right">Dépenses</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-50 uppercase tracking-wider text-right">Solde</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -72,7 +72,7 @@ function App() {
             </tbody>
             {/* Pied de tableau pour le total final */}
             <tfoot>
-               <tr className="bg-slate-900 text-white font-bold">
+               <tr className="bg-slate-900 text-white font-bold border">
                  <td colSpan="2" className="px-6 py-4">TOTAL</td>
                  <td className="px-6 py-4 text-right">
                  {transactions.totalRecettes.toLocaleString()} Ar
@@ -80,7 +80,7 @@ function App() {
                  <td className="px-6 py-4 text-right">
                  {transactions.totalDepenses.toLocaleString()} Ar
                  </td>
-                 <td className="px-6 py-4 text-right text-lg">
+                 <td className="px-6 py-4 text-right">
                  {transactions.soldeFinal.toLocaleString()} Ar
                  </td>
                </tr>
