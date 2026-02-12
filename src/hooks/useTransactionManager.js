@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { computeBalances } from "../core/finance";
+import {computeBalances} from "../core/finance";
 
 export const useTransactionManager = (initialData = []) => {
   
@@ -29,3 +29,5 @@ export const useTransactionManager = (initialData = []) => {
     addTransaction,
   };
 };
+
+// export default useTransactionManager;

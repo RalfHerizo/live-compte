@@ -1,35 +1,90 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { useTransactionManager } from './hooks/useTransactionManager';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { transactions, setFilterLibelle } = useTransactionManager([
+    { id: 1, date: "2026-01-02", libelle: "LOYER", recette: 1000, depense: 0 },
+    { id: 2, date: "2026-01-10", libelle: "ENTRETIEN", recette: 0, depense: 500 },
+  ]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900">
+      <div className="max-w-5xl mx-auto">
+        
+        {/* Header - Masqué à l'impression */}
+        <header className="flex flex-col justify-between items-center mb-10 gap-4 no-print">
+          <div>
+            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
+              Live Compte
+            </h1>
+            <p className="text-slate-500">Gestion de trésorerie en temps réel</p>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <input 
+              type="text"
+              placeholder="Rechercher un libellé..."
+              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all w-64"
+              onChange={(e) => setFilterLibelle(e.target.value)}
+            />
+            <button 
+              onClick={() => window.print()}
+              className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm"
+            >
+              Exporter PDF
+            </button>
+          </div>
+        </header>
+
+        {/* Tableau Style "Clean Architecture" */}
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-50 border-b border-slate-200">
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600 uppercase tracking-wider">Libellé</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600 uppercase tracking-wider text-right">Recettes</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600 uppercase tracking-wider text-right">Dépenses</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600 uppercase tracking-wider text-right">Solde</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {transactions.map((t) => (
+                <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-6 py-4 text-slate-600 whitespace-nowrap">
+                    {new Date(t.date).toLocaleDateString('fr-FR')}
+                  </td>
+                  <td className="px-6 py-4 font-medium text-slate-900">
+                    {t.libelle}
+                  </td>
+                  <td className="px-6 py-4 text-right text-emerald-600 font-medium">
+                    {t.recette > 0 ? `${t.recette.toLocaleString()} €` : '-'}
+                  </td>
+                  <td className="px-6 py-4 text-right text-rose-600 font-medium">
+                    {t.depense > 0 ? `${t.depense.toLocaleString()} €` : '-'}
+                  </td>
+                  <td className="px-6 py-4 text-right font-bold text-slate-900 bg-slate-50/30">
+                    {t.solde.toLocaleString()} €
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            {/* Pied de tableau pour le total final */}
+            <tfoot>
+               <tr className="bg-slate-900 text-white font-bold">
+                 <td colSpan="2" className="px-6 py-4">TOTAL</td>
+                 <td className="px-6 py-4 text-right">-</td>
+                 <td className="px-6 py-4 text-right">-</td>
+                 <td className="px-6 py-4 text-right text-lg">
+                   {transactions.length > 0 ? transactions[transactions.length - 1].solde.toLocaleString() : 0} €
+                 </td>
+               </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
