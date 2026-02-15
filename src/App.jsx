@@ -1,13 +1,10 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useTransactionManager } from './hooks/useTransactionManager';
 
 function App() {
+  const initialTransactions = JSON.parse(localStorage.getItem('transactions')) || [];
   const { transactions, setFilterLibelle, addTransaction, dateFilter, setDateFilter } =
-    useTransactionManager([
-      { id: 1, date: '2026-01-02', libelle: 'LOYER', recette: 1000, depense: 0 },
-      { id: 2, date: '2026-01-10', libelle: 'ENTRETIEN', recette: 0, depense: 500 },
-      { id: 3, date: '2026-01-11', libelle: 'LOYER', recette: 4000, depense: 0 },
-    ]);
+    useTransactionManager(initialTransactions);
 
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
@@ -15,6 +12,10 @@ function App() {
     recette: '',
     depense: '',
   });
+
+  useEffect(() => {
+    localStorage.setItem('transactions', JSON.stringify(transactions.items));
+  }, [transactions.items]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
