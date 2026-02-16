@@ -34,6 +34,14 @@ function App() {
     setDateFilter((prev) => ({ ...prev, mode }));
   };
 
+  const handleRecetteChange = (value) => {
+    setFormData({ ...formData, recette: value, depense: '' });
+  };
+
+  const handleDepenseChange = (value) => {
+    setFormData({ ...formData, depense: value, recette: '' });
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900">
       <div className="max-w-[1400px] mx-auto">
@@ -161,7 +169,8 @@ function App() {
                       type="number"
                       placeholder="0"
                       value={formData.recette}
-                      onChange={(e) => setFormData({ ...formData, recette: e.target.value })}
+                      onChange={(e) => handleRecetteChange(e.target.value)}
+                      disabled={!!formData.depense}
                       className="w-full px-3 py-2 border border-slate-300 outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
@@ -171,7 +180,8 @@ function App() {
                       type="number"
                       placeholder="0"
                       value={formData.depense}
-                      onChange={(e) => setFormData({ ...formData, depense: e.target.value })}
+                      onChange={(e) => handleDepenseChange(e.target.value)}
+                      disabled={!!formData.recette}
                       className="w-full px-3 py-2 border border-slate-300 outline-none focus:ring-2 focus:ring-rose-500"
                     />
                   </div>
