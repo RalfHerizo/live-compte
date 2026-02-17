@@ -1,3 +1,6 @@
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 /**
  * Calcule le solde cumulé pour chaque transaction.
  * @param {Array} transactions - Liste brute (date, libelle, recette, depense)
@@ -60,4 +63,36 @@ export const computeBalances = (transactions) => {
   };
 };
 
-// export default computeBalances;
+function exportPDF(transactions, libelle, dateFrom, dateTo) {
+  const doc = new jsPDF();
+
+  const header = `Résidence la félicité Ambatoroaka. Facture du ${libelle} de ${dateFrom} au ${dateTo}`;
+
+  autoTable(doc, {
+    head: [['Date', 'Libellé', 'Recettes', 'Dépenses', 'Solde']],
+    body: transactions.map((t) => [
+      new Date(t.date).toLocaleDateString('fr-FR'),
+      t.libelle,
+      t.recette > 0 ? `${t.recette.toLocaleString()} Ar` : '-',
+      t.depense > 0 ? `${t.depense.toLocaleString()} Ar` : '-',
+      t.solde.toLocaleString() + ' Ar',
+    ]),
+    startY: 20, // Leave space for the header
+    didDrawPage: (data) => {
+      const pageWidth = doc.internal.pageSize.width;
+      doc.setFontSize(12);
+      doc.setTextColor(40);
+      doc.text(header, pageWidth / 2, 10, { align: 'center' });
+
+      // Add page number at the bottom
+      const pageCount = doc.internal.getNumberOfPages();
+      doc.setFontSize(8);
+      doc.text(`Page ${data.pageNumber} / ${pageCount}`, data.settings.margin.left, doc.internal.pageSize.height - 10);
+    },
+    margin: { top: 20 }, // Ensure the table doesn't overlap the header
+  });
+
+  doc.save('facture.pdf');
+}
+
+export default exportPDF;

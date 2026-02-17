@@ -13,6 +13,12 @@ function App() {
     depense: '',
   });
 
+  const [printDetails, setPrintDetails] = useState({
+    libelle: '',
+    dateFrom: '',
+    dateTo: '',
+  });
+
   useEffect(() => {
     localStorage.setItem('transactions', JSON.stringify(transactions.items));
   }, [transactions.items]);
@@ -42,10 +48,14 @@ function App() {
     setFormData({ ...formData, depense: value, recette: '' });
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900">
       <div className="max-w-[1400px] mx-auto">
-        <header className="grid grid-cols-1 md:grid-cols-4 mb-10 gap-6 md:gap-10 items-end no-print">
+        <header className="grid grid-cols-1 md:grid-cols-4 mb-6 gap-6 md:gap-10 items-end no-print">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Live Compte</h1>
             <p className="text-slate-500">Gestion de tresorerie en temps reel</p>
@@ -76,63 +86,15 @@ function App() {
             </div>
 
             <button
-              onClick={() => window.print()}
+              onClick={handlePrint}
               className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 font-medium transition-all shadow-lg active:scale-95 md:col-span-1"
             >
               Exporter PDF
             </button>
-
-            {dateFilter.mode === 'month' && (
-              <div className="md:col-span-3">
-                <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Mois</label>
-                <input
-                  type="month"
-                  value={dateFilter.month}
-                  onChange={(e) =>
-                    setDateFilter((prev) => ({
-                      ...prev,
-                      month: e.target.value,
-                    }))
-                  }
-                  className="w-full px-3 py-2 bg-white border border-slate-200 outline-none"
-                />
-              </div>
-            )}
-
-            {dateFilter.mode === 'range' && (
-              <>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Date debut</label>
-                  <input
-                    type="date"
-                    value={dateFilter.from}
-                    onChange={(e) =>
-                      setDateFilter((prev) => ({
-                        ...prev,
-                        from: e.target.value,
-                      }))
-                    }
-                    className="w-full px-3 py-2 bg-white border border-slate-200 outline-none"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Date fin</label>
-                  <input
-                    type="date"
-                    value={dateFilter.to}
-                    onChange={(e) =>
-                      setDateFilter((prev) => ({
-                        ...prev,
-                        to: e.target.value,
-                      }))
-                    }
-                    className="w-full px-3 py-2 bg-white border border-slate-200 outline-none"
-                  />
-                </div>
-              </>
-            )}
           </div>
         </header>
+
+        
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <aside className="lg:col-span-1 no-print">
@@ -198,7 +160,38 @@ function App() {
           </aside>
 
           <main className="lg:col-span-3 overflow-x-auto">
-            <div className="bg-white border border-slate-200 overflow-hidden shadow-sm">
+            <div className="table-parent-container bg-white border border-slate-200 overflow-hidden shadow-sm pt-3">
+              <div className="print-only flex justify-center">
+                <h2 className="text-center text-lg mb-4">
+                  Résidence <strong className='uppercase' >la félicité</strong> <br /> Ambatoroaka. 
+                  <br />
+                  <div className='my-3'>
+                    Facture du 
+                    <input
+                      type="text"
+                      placeholder="Libellé"
+                      value={printDetails.libelle}
+                      onChange={(e) => setPrintDetails({ ...printDetails, libelle: e.target.value })}
+                      className="inline-block border-b border-gray-400 outline-none text-center w-40"
+                    />
+                    de
+                    <input
+                      type="date"
+                      value={printDetails.dateFrom}
+                      onChange={(e) => setPrintDetails({ ...printDetails, dateFrom: e.target.value })}
+                      className="mx-2 inline-block border-b border-gray-400 outline-none text-center w-40"
+                    />
+                    au 
+                    <input
+                      type="date"
+                      value={printDetails.dateTo}
+                      onChange={(e) => setPrintDetails({ ...printDetails, dateTo: e.target.value })}
+                      className=" mx-2 inline-block border-b border-gray-400 outline-none text-center w-40"
+                    />
+                  </div>
+                  
+                </h2>
+              </div>
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-slate-900 border-b border-slate-200">

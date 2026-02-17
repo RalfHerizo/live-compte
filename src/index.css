@@ -29,6 +29,10 @@
       overflow: visible;
       border-radius: 0;
     }
+
+    main div.table-parent-container{
+      border: none;
+    }
   
     table {
       width: 100%;
