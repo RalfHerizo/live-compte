@@ -90,11 +90,26 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
   const addFooter = (data) => {
     const pageHeight = doc.internal.pageSize.height;
     const pageWidth = doc.internal.pageSize.width;
-    // const pageCount = doc.internal.getNumberOfPages();
-    doc.setFontSize(8);
-    // doc.text(`Page ${data.pageNumber} / ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
     doc.setFontSize(10);
-    doc.text('Résidence LA FELICITE, bis au Lot VB 72 ZX Ambatoroaka.', pageWidth / 2, pageHeight - 10, { align: 'center' });
+
+    const prefix = "Résidence ";
+    const boldPart = "LA FELICITE";
+    const suffix = ", bis au Lot VB 72 ZX Ambatoroaka.";
+
+    // Calcul pour centrer l'ensemble
+    const totalWidth = doc.getTextWidth(prefix + boldPart + suffix);
+    let currentX = (pageWidth - totalWidth) / 2;
+
+    doc.setFont("helvetica", "normal");
+    doc.text(prefix, currentX, pageHeight - 10);
+    currentX += doc.getTextWidth(prefix);
+
+    doc.setFont("helvetica", "bold");
+    doc.text(boldPart, currentX, pageHeight - 10);
+    currentX += doc.getTextWidth(boldPart);
+
+    doc.setFont("helvetica", "normal");
+    doc.text(suffix, currentX, pageHeight - 10);
   };
 
   const tableData = transactions.map((t) => [
