@@ -63,10 +63,20 @@ export const computeBalances = (transactions) => {
   };
 };
 
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+};
+
 function exportPDF(transactions, libelle, dateFrom, dateTo) {
   const doc = new jsPDF();
 
-  const header = `Résidence LA FELICITE Ambatoroaka. \nFacture du ${libelle} de ${dateFrom} au ${dateTo}`;
+  const dateFromFR = formatDate(dateFrom);
+  const dateToFR = formatDate(dateTo);
 
   const addHeader = () => {
     const pageWidth = doc.internal.pageSize.width;
@@ -84,7 +94,7 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
     doc.text(" Ambatoroaka.", 112, yPos);
 
     // Ligne 2 : La date (en dessous)
-    doc.text(`Facture du ${libelle} de ${dateFrom} au ${dateTo}`, pageWidth / 2, yPos + 7, { align: 'center' });
+    doc.text(`Facture du ${libelle} de ${dateFromFR} au ${dateToFR}`, pageWidth / 2, yPos + 7, { align: 'center' });
   };
 
   const addFooter = (data) => {
