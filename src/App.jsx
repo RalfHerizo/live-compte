@@ -4,7 +4,7 @@ import exportPDF from './core/finance';
 
 function App() {
   const initialTransactions = JSON.parse(localStorage.getItem('transactions')) || [];
-  const { transactions, setFilterLibelle, addTransaction, dateFilter, setDateFilter } =
+  const { transactions, setFilterLibelle, addTransaction, dateFilter, setDateFilter, toggleSortOrder } =
     useTransactionManager(initialTransactions);
 
   const [formData, setFormData] = useState({
@@ -55,7 +55,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900">
-      <div className="max-w-[1400px] mx-auto">
+      <div className="max-w-350 mx-auto">
         <header className="grid grid-cols-1 md:grid-cols-4 mb-6 gap-6 md:gap-10 items-end no-print">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Live Compte</h1>
@@ -191,50 +191,55 @@ function App() {
                   
                 </h2>
               </div>
-              <table className="w-full text-left border-collapse print:mt-6 print:pt-6">
-                <thead>
-                  <tr className="bg-slate-900 border-b border-slate-200">
-                    <th className=" sticky top-0 z-10 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider">Date</th>
-                    <th className=" sticky top-0 z-10 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider">Libelle</th>
-                    <th className=" sticky top-0 z-10 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Recettes</th>
-                    <th className=" sticky top-0 z-10 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Depenses</th>
-                    <th className=" sticky top-0 z-10 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Solde</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {transactions.items.map((t) => (
-                    <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="px-6 py-4 text-slate-600 whitespace-nowrap text-sm">
-                        {new Date(t.date).toLocaleDateString('fr-FR')}
-                      </td>
-                      <td className="px-6 py-4 font-medium text-slate-900 text-sm italic">{t.libelle.toUpperCase()}</td>
-                      <td className="px-6 py-4 text-right text-emerald-600 font-bold text-sm">
-                        {t.recette > 0 ? `${t.recette.toLocaleString()} Ar` : '-'}
-                      </td>
-                      <td className="px-6 py-4 text-right text-rose-600 font-bold text-sm">
-                        {t.depense > 0 ? `${t.depense.toLocaleString()} Ar` : '-'}
-                      </td>
-                      <td className="px-6 py-4 text-right font-black text-slate-900 bg-slate-50/30 text-sm">
-                        {t.solde.toLocaleString()} Ar
-                      </td>
+              
+              <div className="relative max-h-[90vh] overflow-y-auto border border-slate-200 ">
+                <table className="w-full text-left border-collapse print:mt-6 print:pt-6">
+                  <thead className=''  >
+                    <tr className="  border-b border-slate-200  ">
+                      <th className=" sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider" onClick={toggleSortOrder} style={{ cursor: 'pointer' }}>
+                        Date
+                      </th>
+                      <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider">Libelle</th>
+                      <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Recettes</th>
+                      <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Depenses</th>
+                      <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Solde</th>
                     </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr className="bg-slate-900 text-white font-bold">
-                    <td colSpan="2" className="px-6 py-5 text-sm bold">
-                      TOTAL GENERAL
-                    </td>
-                    <td className="px-6 py-5 text-right text-emerald-400 bold">
-                      {transactions.totalRecettes.toLocaleString()} Ar
-                    </td>
-                    <td className="px-6 py-5 text-right text-rose-400 bold">
-                      {transactions.totalDepenses.toLocaleString()} Ar
-                    </td>
-                    <td className="px-6 py-5 text-right bold">{transactions.soldeFinal.toLocaleString()} Ar</td>
-                  </tr>
-                </tfoot>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {transactions.items.map((t) => (
+                      <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
+                        <td className="px-6 py-4 text-slate-600 whitespace-nowrap text-sm">
+                          {new Date(t.date).toLocaleDateString('fr-FR')}
+                        </td>
+                        <td className="px-6 py-4 font-medium text-slate-900 text-sm italic">{t.libelle.toUpperCase()}</td>
+                        <td className="px-6 py-4 text-right text-emerald-600 font-bold text-sm">
+                          {t.recette > 0 ? `${t.recette.toLocaleString()} Ar` : '-'}
+                        </td>
+                        <td className="px-6 py-4 text-right text-rose-600 font-bold text-sm">
+                          {t.depense > 0 ? `${t.depense.toLocaleString()} Ar` : '-'}
+                        </td>
+                        <td className="px-6 py-4 text-right font-black text-slate-900 bg-slate-50/30 text-sm">
+                          {t.solde.toLocaleString()} Ar
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    <tr className="bg-slate-900 text-white font-bold">
+                      <td colSpan="2" className="px-6 py-5 text-sm bold">
+                        TOTAL GENERAL
+                      </td>
+                      <td className="px-6 py-5 text-right text-emerald-400 bold">
+                        {transactions.totalRecettes.toLocaleString()} Ar
+                      </td>
+                      <td className="px-6 py-5 text-right text-rose-400 bold">
+                        {transactions.totalDepenses.toLocaleString()} Ar
+                      </td>
+                      <td className="px-6 py-5 text-right bold">{transactions.soldeFinal.toLocaleString()} Ar</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
               <footer id='pdf-footer' className="print-only mt-3 text-sm print:fixed print:bottom-8 print:w-full print:text-center print:bg-red-500">
                 <p className='text-center' >Résidence <strong>LA FELICITE</strong>, bis au Lot VB 72 ZX Ambatoroaka.</p>
               </footer>
