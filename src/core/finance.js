@@ -66,33 +66,54 @@ export const computeBalances = (transactions) => {
 function exportPDF(transactions, libelle, dateFrom, dateTo) {
   const doc = new jsPDF();
 
-  const header = `Résidence la félicité Ambatoroaka. Facture du ${libelle} de ${dateFrom} au ${dateTo}`;
+  const header = `Résidence LA FELICITE Ambatoroaka. \nFacture du ${libelle} de ${dateFrom} au ${dateTo}`;
+
+  const addHeader = () => {
+    const pageWidth = doc.internal.pageSize.width;
+    doc.setFontSize(12);
+    doc.setTextColor(40);
+    doc.text(header, pageWidth / 2, 15, { align: 'center' });
+  };
+
+  const addFooter = (data) => {
+    const pageHeight = doc.internal.pageSize.height;
+    const pageWidth = doc.internal.pageSize.width;
+    // const pageCount = doc.internal.getNumberOfPages();
+    doc.setFontSize(8);
+    // doc.text(`Page ${data.pageNumber} / ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+    doc.setFontSize(10);
+    doc.text('Résidence LA FELICITE, bis au Lot VB 72 ZX Ambatoroaka.', pageWidth / 2, pageHeight - 10, { align: 'center' });
+  };
+
+  const tableData = transactions.map((t) => [
+    new Date(t.date).toLocaleDateString('fr-FR'),
+    t.libelle,
+    t.recette > 0 ? `${t.recette.toLocaleString()} Ar` : '-',
+    t.depense > 0 ? `${t.depense.toLocaleString()} Ar` : '-',
+    t.solde.toLocaleString() + ' Ar',
+  ]);
+
+  const totalRow = [
+    'TOTAL GENERAL',
+    '',
+    `${transactions.reduce((sum, t) => sum + (t.recette || 0), 0).toLocaleString()} Ar`,
+    `${transactions.reduce((sum, t) => sum + (t.depense || 0), 0).toLocaleString()} Ar`,
+    `${transactions[transactions.length - 1]?.solde.toLocaleString()} Ar`,
+  ];
 
   autoTable(doc, {
     head: [['Date', 'Libellé', 'Recettes', 'Dépenses', 'Solde']],
-    body: transactions.map((t) => [
-      new Date(t.date).toLocaleDateString('fr-FR'),
-      t.libelle,
-      t.recette > 0 ? `${t.recette.toLocaleString()} Ar` : '-',
-      t.depense > 0 ? `${t.depense.toLocaleString()} Ar` : '-',
-      t.solde.toLocaleString() + ' Ar',
-    ]),
-    startY: 20, // Leave space for the header
+    body: [...tableData, totalRow],
+    startY: 25, // Leave space for the header
+    margin: { top: 25, bottom: 25 }, // Ensure space for header and footer
     didDrawPage: (data) => {
-      const pageWidth = doc.internal.pageSize.width;
-      doc.setFontSize(12);
-      doc.setTextColor(40);
-      doc.text(header, pageWidth / 2, 10, { align: 'center' });
-
-      // Add page number at the bottom
-      const pageCount = doc.internal.getNumberOfPages();
-      doc.setFontSize(8);
-      doc.text(`Page ${data.pageNumber} / ${pageCount}`, data.settings.margin.left, doc.internal.pageSize.height - 10);
+      addHeader();
+      addFooter(data);
     },
-    margin: { top: 20 }, // Ensure the table doesn't overlap the header
   });
 
   doc.save('facture.pdf');
 }
 
 export default exportPDF;
+

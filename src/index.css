@@ -29,13 +29,10 @@
       overflow: visible;
       border-radius: 0;
     }
-
-    main div.table-parent-container{
-      border: none;
-    }
   
     table {
       width: 100%;
+      box-shadow: none!important;
       border-collapse: collapse;
       font-size: 10pt;
       page-break-inside: auto;
@@ -129,5 +126,5 @@
       padding: 9px 12px;
     }
 
-    
+     
   }

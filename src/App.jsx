@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useTransactionManager } from './hooks/useTransactionManager';
+import exportPDF from './core/finance';
 
 function App() {
   const initialTransactions = JSON.parse(localStorage.getItem('transactions')) || [];
@@ -48,8 +49,8 @@ function App() {
     setFormData({ ...formData, depense: value, recette: '' });
   };
 
-  const handlePrint = () => {
-    window.print();
+  const handleExportPDF = () => {
+    exportPDF(transactions.items, printDetails.libelle, printDetails.dateFrom, printDetails.dateTo);
   };
 
   return (
@@ -86,15 +87,13 @@ function App() {
             </div>
 
             <button
-              onClick={handlePrint}
+              onClick={handleExportPDF}
               className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 font-medium transition-all shadow-lg active:scale-95 md:col-span-1"
             >
               Exporter PDF
             </button>
           </div>
         </header>
-
-        
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <aside className="lg:col-span-1 no-print">
@@ -160,10 +159,10 @@ function App() {
           </aside>
 
           <main className="lg:col-span-3 overflow-x-auto">
-            <div className="table-parent-container bg-white border border-slate-200 overflow-hidden shadow-sm pt-3">
+            <div className="table-parent-container bg-white  overflow-hidden shadow-sm pt-3">
               <div className="print-only flex justify-center">
                 <h2 className="text-center text-lg mb-4">
-                  Résidence <strong className='uppercase' >la félicité</strong> <br /> Ambatoroaka. 
+                  Résidence <strong className='uppercase' >la félicité</strong> Ambatoroaka. 
                   <br />
                   <div className='my-3'>
                     Facture du 
@@ -192,14 +191,14 @@ function App() {
                   
                 </h2>
               </div>
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse print:mt-6 print:pt-6">
                 <thead>
                   <tr className="bg-slate-900 border-b border-slate-200">
-                    <th className="px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider">Libelle</th>
-                    <th className="px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Recettes</th>
-                    <th className="px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Depenses</th>
-                    <th className="px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Solde</th>
+                    <th className=" sticky top-0 z-10 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider">Date</th>
+                    <th className=" sticky top-0 z-10 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider">Libelle</th>
+                    <th className=" sticky top-0 z-10 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Recettes</th>
+                    <th className=" sticky top-0 z-10 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Depenses</th>
+                    <th className=" sticky top-0 z-10 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Solde</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -236,6 +235,10 @@ function App() {
                   </tr>
                 </tfoot>
               </table>
+              <footer id='pdf-footer' className="print-only mt-3 text-sm print:fixed print:bottom-8 print:w-full print:text-center print:bg-red-500">
+                <hr className='mr-8' />  
+                <p className='text-center' >Résidence <strong>LA FELICITE</strong>, bis au Lot VB 72 ZX Ambatoroaka.</p>
+              </footer>
             </div>
           </main>
         </div>
