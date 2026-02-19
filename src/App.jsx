@@ -222,21 +222,20 @@ function App() {
                 </tbody>
                 <tfoot>
                   <tr className="bg-slate-900 text-white font-bold">
-                    <td colSpan="2" className="px-6 py-5 text-sm">
+                    <td colSpan="2" className="px-6 py-5 text-sm bold">
                       TOTAL GENERAL
                     </td>
-                    <td className="px-6 py-5 text-right text-emerald-400">
+                    <td className="px-6 py-5 text-right text-emerald-400 bold">
                       {transactions.totalRecettes.toLocaleString()} Ar
                     </td>
-                    <td className="px-6 py-5 text-right text-rose-400">
+                    <td className="px-6 py-5 text-right text-rose-400 bold">
                       {transactions.totalDepenses.toLocaleString()} Ar
                     </td>
-                    <td className="px-6 py-5 text-right">{transactions.soldeFinal.toLocaleString()} Ar</td>
+                    <td className="px-6 py-5 text-right bold">{transactions.soldeFinal.toLocaleString()} Ar</td>
                   </tr>
                 </tfoot>
               </table>
               <footer id='pdf-footer' className="print-only mt-3 text-sm print:fixed print:bottom-8 print:w-full print:text-center print:bg-red-500">
-                <hr className='mr-8' />  
                 <p className='text-center' >Résidence <strong>LA FELICITE</strong>, bis au Lot VB 72 ZX Ambatoroaka.</p>
               </footer>
             </div>

@@ -129,10 +129,25 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
   ];
 
   autoTable(doc, {
-    head: [['Date', 'Libellé', 'Recettes', 'Dépenses', 'Solde']],
+    head: [['Date', 'Libellé', 'Recettes', 'Dépenses', 'Solde'].map( header=> header.toUpperCase())],
     body: [...tableData, totalRow],
     startY: 25, // Leave space for the header
+    headStyles: {
+      fillColor: [26, 26, 26], // Noir en RGB
+      textColor: [255, 255, 255], // Texte en blanc pour le contraste
+      fontStyle: 'bold',
+    },
     margin: { top: 25, bottom: 25 }, // Ensure space for header and footer
+    
+    didParseCell: (data) => {
+      const isTotalRow = data.row.index === tableData.length;
+      if (isTotalRow) {
+        data.cell.styles.fontStyle = 'bold';
+        data.cell.styles.fillColor = [26, 26, 26];
+        data.cell.styles.textColor = [255, 255, 255];
+      }
+    },
+
     didDrawPage: (data) => {
       addHeader();
       addFooter(data);
