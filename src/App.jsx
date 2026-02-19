@@ -20,21 +20,42 @@ function App() {
     dateTo: '',
   });
 
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {
     localStorage.setItem('transactions', JSON.stringify(transactions.items));
   }, [transactions.items]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.libelle) return;
+
+    let newErrors = {};
+    
+    if (!formData.libelle.trim()) {
+      newErrors.libelle = "Le libellé est requis";
+    }
+
+    const recette = Number(formData.recette) || 0;
+    const depense = Number(formData.depense) || 0;
+    if (recette === 0 && depense === 0) {
+      newErrors.montant = "Saisissez au moins un montant";
+    }
+
+    // S'il y a des erreurs, on les affiche et on arrête tout
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
     addTransaction({
       ...formData,
+      libelle: formData.libelle.trim().toUpperCase(),
       recette: Number(formData.recette) || 0,
       depense: Number(formData.depense) || 0,
     });
 
     setFormData({ ...formData, libelle: '', recette: '', depense: '' });
+    setErrors({});
   };
 
   const handleDateModeChange = (mode) => {
@@ -113,22 +134,36 @@ function App() {
 
                 <div>
                   <label className="block text-xs font-bold uppercase text-slate-500 mb-1">Libelle</label>
+                  {errors.libelle && (
+                    <span className="text-rose-500 text-[10px] font-bold animate-bounce block mb-1">
+                      {errors.libelle}
+                    </span>
+                  )}
                   <input
                     type="text"
+                    minLengh="3"
                     placeholder="ex: Vente de marchandise..."
                     value={formData.libelle}
-                    onChange={(e) => setFormData({ ...formData, libelle: e.target.value })}
+                    onChange={(e) => 
+                    {
+                      setFormData({ ...formData, libelle: e.target.value });
+                      if(errors.libelle) setErrors({...errors, libelle: null});
+                    }
+                  }
                     className="w-full px-3 py-2 border border-slate-300 outline-none focus:ring-2 focus:ring-slate-900"
                     required
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
+                  
                   <div>
-                    <label className="block text-xs font-bold uppercase text-emerald-600 mb-1">Recette</label>
+                    <label className="block text-xs font-bold uppercase text-emerald-600 mb-1">Recette (Ar)</label>
+                    
                     <input
                       type="number"
                       placeholder="0"
+                      min="0"
                       value={formData.recette}
                       onChange={(e) => handleRecetteChange(e.target.value)}
                       disabled={!!formData.depense}
@@ -136,16 +171,22 @@ function App() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold uppercase text-rose-600 mb-1">Depense</label>
+                    <label className="block text-xs font-bold uppercase text-rose-600 mb-1">Depense (Ar)</label>
                     <input
                       type="number"
                       placeholder="0"
+                      min="0"
                       value={formData.depense}
                       onChange={(e) => handleDepenseChange(e.target.value)}
                       disabled={!!formData.recette}
                       className="w-full px-3 py-2 border border-slate-300 outline-none focus:ring-2 focus:ring-rose-500"
                     />
                   </div>
+                  <div className="col-span-2">
+                    {errors.montant && (
+                        <span className="text-rose-500 text-[10px] font-bold block mb-1">{errors.montant}</span>
+                      )}
+                    </div>
                 </div>
 
                 <button
