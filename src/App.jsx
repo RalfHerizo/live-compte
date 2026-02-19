@@ -62,6 +62,10 @@ function App() {
     setDateFilter((prev) => ({ ...prev, mode }));
   };
 
+  const handleDateFilterChange = (field, value) => {
+    setDateFilter((prev) => ({ ...prev, [field]: value }));
+  };
+
   const handleRecetteChange = (value) => {
     setFormData({ ...formData, recette: value, depense: '' });
   };
@@ -200,6 +204,30 @@ function App() {
           </aside>
 
           <main className="lg:col-span-3 overflow-x-auto">
+            <div className='grid grid-cols-2 gap-3 mb-3' >
+              {dateFilter.mode === 'range' && (
+                <>
+                  <div className="md:col-span-1">
+                    <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Date debut</label>
+                    <input
+                      type="date"
+                      value={dateFilter.from}
+                      onChange={(e) => handleDateFilterChange('from', e.target.value)}
+                      className="w-full px-3 py-2 bg-white border border-slate-200 outline-none"
+                    />
+                  </div>
+                  <div className="md:col-span-1">
+                    <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Date fin</label>
+                    <input
+                      type="date"
+                      value={dateFilter.to}
+                      onChange={(e) => handleDateFilterChange('to', e.target.value)}
+                      className="w-full px-3 py-2 bg-white border border-slate-200 outline-none"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
             <div className="table-parent-container bg-white  overflow-hidden shadow-sm py-3">
               <div className="print-only flex justify-center">
                 <h2 className="text-center text-lg mb-4">
