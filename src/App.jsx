@@ -106,7 +106,6 @@ function App() {
                 className="w-full px-3 py-2 bg-white border border-slate-200 outline-none"
               >
                 <option value="all">Toutes</option>
-                <option value="month">Par mois</option>
                 <option value="range">Entre 2 dates</option>
               </select>
             </div>
