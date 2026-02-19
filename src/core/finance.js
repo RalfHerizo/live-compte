@@ -93,8 +93,29 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
     doc.setFont("helvetica", "normal");
     doc.text(" Ambatoroaka.", 112, yPos);
 
-    // Ligne 2 : La date (en dessous)
-    doc.text(`Facture du ${libelle} de ${dateFromFR} au ${dateToFR}`, pageWidth / 2, yPos + 7, { align: 'center' });
+    // Ligne 2 : libelle + dates en gras
+    const headerParts = [
+      { text: "Facture du ", bold: false },
+      { text: libelle, bold: true },
+      { text: " de ", bold: false },
+      { text: dateFromFR, bold: true },
+      { text: " au ", bold: false },
+      { text: dateToFR, bold: true },
+    ];
+
+    const totalWidth = headerParts.reduce((sum, part) => {
+      doc.setFont("helvetica", part.bold ? "bold" : "normal");
+      return sum + doc.getTextWidth(part.text);
+    }, 0);
+
+    let currentX = (pageWidth - totalWidth) / 2;
+    const lineY = yPos + 7;
+
+    headerParts.forEach((part) => {
+      doc.setFont("helvetica", part.bold ? "bold" : "normal");
+      doc.text(part.text, currentX, lineY);
+      currentX += doc.getTextWidth(part.text);
+    });
   };
 
   const addFooter = (data) => {

@@ -21,6 +21,7 @@ function App() {
   });
 
   const [errors, setErrors] = useState({});
+  const [exportErrors, setExportErrors] = useState({});
 
   useEffect(() => {
     localStorage.setItem('transactions', JSON.stringify(transactions.items));
@@ -75,6 +76,22 @@ function App() {
   };
 
   const handleExportPDF = () => {
+    let newErrors = {};
+
+    if (!printDetails.libelle.trim() || !printDetails.dateFrom || !printDetails.dateTo) {
+      newErrors.general = "Veuillez remplir le libellé, la date de début et la date de fin avant l'exportation.";
+    }
+
+    if (printDetails.dateFrom && printDetails.dateTo && printDetails.dateFrom > printDetails.dateTo) {
+      newErrors.general = "La date de début doit être antérieure ou égale à la date de fin.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setExportErrors(newErrors);
+      return;
+    }
+
+    setExportErrors({});
     exportPDF(transactions.items, printDetails.libelle, printDetails.dateFrom, printDetails.dateTo);
   };
 
@@ -238,23 +255,35 @@ function App() {
                       type="text"
                       placeholder="Libellé"
                       value={printDetails.libelle}
-                      onChange={(e) => setPrintDetails({ ...printDetails, libelle: e.target.value })}
-                      className="inline-block border-b border-gray-400 outline-none text-center w-40"
+                      onChange={(e) => {
+                        setPrintDetails({ ...printDetails, libelle: e.target.value });
+                        if (exportErrors.general) setExportErrors({});
+                      }}
+                      className="inline-block border-b border-gray-400 outline-none text-center w-40 font-bold"
                     />
                     de
                     <input
                       type="date"
                       value={printDetails.dateFrom}
-                      onChange={(e) => setPrintDetails({ ...printDetails, dateFrom: e.target.value })}
-                      className="mx-2 inline-block border-b border-gray-400 outline-none text-center w-40"
+                      onChange={(e) => {
+                        setPrintDetails({ ...printDetails, dateFrom: e.target.value });
+                        if (exportErrors.general) setExportErrors({});
+                      }}
+                      className="mx-2 inline-block border-b border-gray-400 outline-none text-center w-40 font-bold"
                     />
                     au 
                     <input
                       type="date"
                       value={printDetails.dateTo}
-                      onChange={(e) => setPrintDetails({ ...printDetails, dateTo: e.target.value })}
-                      className=" mx-2 inline-block border-b border-gray-400 outline-none text-center w-40"
+                      onChange={(e) => {
+                        setPrintDetails({ ...printDetails, dateTo: e.target.value });
+                        if (exportErrors.general) setExportErrors({});
+                      }}
+                      className=" mx-2 inline-block border-b border-gray-400 outline-none text-center w-40 font-bold"
                     />
+                    {exportErrors.general && (
+                      <p className="text-rose-500 text-[11px] font-bold mt-2">{exportErrors.general}</p>
+                    )}
                   </div>
                   
                 </h2>
