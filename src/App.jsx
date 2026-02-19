@@ -4,7 +4,7 @@ import exportPDF from './core/finance';
 
 function App() {
   const initialTransactions = JSON.parse(localStorage.getItem('transactions')) || [];
-  const { transactions, setFilterLibelle, addTransaction, dateFilter, setDateFilter, toggleSortOrder } =
+  const { transactions, setFilterLibelle, addTransaction, dateFilter, setDateFilter, toggleSortOrder, deleteTransaction } =
     useTransactionManager(initialTransactions);
 
   const [formData, setFormData] = useState({
@@ -159,7 +159,7 @@ function App() {
           </aside>
 
           <main className="lg:col-span-3 overflow-x-auto">
-            <div className="table-parent-container bg-white  overflow-hidden shadow-sm pt-3">
+            <div className="table-parent-container bg-white  overflow-hidden shadow-sm py-3">
               <div className="print-only flex justify-center">
                 <h2 className="text-center text-lg mb-4">
                   Résidence <strong className='uppercase' >la félicité</strong> Ambatoroaka. 
@@ -203,6 +203,7 @@ function App() {
                       <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Recettes</th>
                       <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Depenses</th>
                       <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Solde</th>
+                      <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -221,6 +222,7 @@ function App() {
                         <td className="px-6 py-4 text-right font-black text-slate-900 bg-slate-50/30 text-sm">
                           {t.solde.toLocaleString()} Ar
                         </td>
+                        <td className='px-2' > <button className='bg-red-500 hover:bg-red-600 hover:cursor-pointer text-center w-full uppercase py-2 text-gray-50' key={t.id} onClick={()=>deleteTransaction(t.id)} >supprimer</button> </td>
                       </tr>
                     ))}
                   </tbody>
@@ -236,6 +238,7 @@ function App() {
                         {transactions.totalDepenses.toLocaleString()} Ar
                       </td>
                       <td className="px-6 py-5 text-right bold">{transactions.soldeFinal.toLocaleString()} Ar</td>
+                      <td className="px-6 py-5 text-right bold"></td>
                     </tr>
                   </tfoot>
                 </table>

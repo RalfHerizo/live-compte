@@ -31,12 +31,17 @@ export const useTransactionManager = (initialData = []) => {
     setTransactions((prev) => [...prev, transactionWithId]);
   };
 
+  const deleteTransaction = (id) => {
+    setTransactions(prev => prev.filter(t => t.id !== id));
+  };
+
   return {
     transactions: processedData,
     setFilterLibelle,
     dateFilter,
     setDateFilter,
     addTransaction,
+    deleteTransaction,
   };
 };
 
