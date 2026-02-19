@@ -114,7 +114,7 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
 
   const tableData = transactions.map((t) => [
     new Date(t.date).toLocaleDateString('fr-FR'),
-    t.libelle,
+    t.libelle.toUpperCase(),
     t.recette > 0 ? `${t.recette.toLocaleString()} Ar` : '-',
     t.depense > 0 ? `${t.depense.toLocaleString()} Ar` : '-',
     t.solde.toLocaleString() + ' Ar',
