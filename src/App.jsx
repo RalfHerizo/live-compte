@@ -361,7 +361,7 @@ function App() {
                       </tr>
                     ) : (
                       transactions.items.map((t) => (
-                        <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
+                        <tr key={t.id} className="odd:bg-slate-100 hover:bg-slate-50/50 transition-colors">
                           <td className="px-6 py-4 text-slate-600 whitespace-nowrap text-sm">
                             {new Date(t.date).toLocaleDateString('fr-FR')}
                           </td>
