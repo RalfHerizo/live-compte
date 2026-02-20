@@ -82,16 +82,15 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
     const pageWidth = doc.internal.pageSize.width;
     const yPos = 15;
     
-    // Ligne 1 : Résidence LA FELICITE Ambatoroaka.
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
-    doc.text("Résidence ", 65, yPos); // Ajuste le X selon tes besoins
+    doc.text("Rapport ", 65, yPos);
     
     doc.setFont("helvetica", "bold");
-    doc.text("LA FELICITE", 86, yPos); 
+    doc.text("de tresorerie", 86, yPos); 
     
     doc.setFont("helvetica", "normal");
-    doc.text(" Ambatoroaka.", 112, yPos);
+    doc.text("DEMO.", 112, yPos);
 
     // Ligne 2 : libelle + dates en gras
     const headerParts = [
@@ -123,10 +122,9 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
     const pageWidth = doc.internal.pageSize.width;
     doc.setFontSize(10);
 
-    const prefix = "Résidence ";
-    const boldPart = "LA FELICITE";
-    const suffix = ", bis au Lot VB 72 ZX Ambatoroaka.";
-
+    const prefix = "Généré via ";
+    const boldPart = "Live Compte App";
+    const suffix = " - Document de démonstration";
     // Calcul pour centrer l'ensemble
     const totalWidth = doc.getTextWidth(prefix + boldPart + suffix);
     let currentX = (pageWidth - totalWidth) / 2;
