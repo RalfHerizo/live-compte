@@ -297,7 +297,7 @@ function App() {
             <div className="table-parent-container bg-white  overflow-hidden shadow-sm py-3">
               <div className="print-only flex justify-center">
                 <h2 className="text-center text-lg mb-4">
-                  Résidence <strong className='uppercase' >la félicité</strong> Ambatoroaka. 
+                Gestion de Trésorerie - <strong className='uppercase'>Démo Publique</strong> 
                   <br />
                   <div className='my-3'>
                     Facture du 
@@ -412,7 +412,7 @@ function App() {
                 </table>
               </div>
               <footer id='pdf-footer' className="print-only mt-3 text-sm print:fixed print:bottom-8 print:w-full print:text-center print:bg-red-500">
-                <p className='text-center' >Résidence <strong>LA FELICITE</strong>, bis au Lot VB 72 ZX Ambatoroaka.</p>
+                <p className='text-center' >Application de Gestion de Caisse - Rapport Automatisé</p>
               </footer>
             </div>
           </main>
