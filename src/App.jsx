@@ -3,9 +3,21 @@ import { useTransactionManager } from './hooks/useTransactionManager';
 import exportPDF from './core/finance';
 
 function App() {
-  const initialTransactions = JSON.parse(localStorage.getItem('transactions')) || [];
-  const { transactions, setFilterLibelle, addTransaction, dateFilter, setDateFilter, toggleSortOrder, deleteTransaction } =
-    useTransactionManager(initialTransactions);
+  
+  // const initialTransactions = JSON.parse(localStorage.getItem('transactions')) || [];
+  // useEffect(() => {
+  //   localStorage.setItem('transactions', JSON.stringify(transactions.items));
+  // }, [transactions.items]);
+  
+  const { 
+    transactions, 
+    setFilterLibelle, 
+    addTransaction, 
+    dateFilter, 
+    setDateFilter, 
+    deleteTransaction, 
+    loading
+  } = useTransactionManager();
 
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
@@ -24,9 +36,6 @@ function App() {
   const [exportErrors, setExportErrors] = useState({});
   const [searchLibelle, setSearchLibelle] = useState('');
 
-  useEffect(() => {
-    localStorage.setItem('transactions', JSON.stringify(transactions.items));
-  }, [transactions.items]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -325,7 +334,7 @@ function App() {
                 <table className="w-full text-left border-collapse print:mt-6 print:pt-6">
                   <thead className=''  >
                     <tr className="  border-b border-slate-200  ">
-                      <th className=" sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider" onClick={toggleSortOrder} style={{ cursor: 'pointer' }}>
+                      <th className=" sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider" style={{ cursor: 'pointer' }}>
                         Date
                       </th>
                       <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider">Libelle</th>
@@ -336,7 +345,13 @@ function App() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {transactions.items.length === 0 ? (
+                    {loading ? (
+                      <tr>
+                        <td colSpan="6" className="px-6 py-10 text-center text-sm text-slate-500 italic">
+                          Chargement des données depuis le cloud...
+                        </td>
+                      </tr>
+                    ) : transactions.items.length === 0 ? (
                       <tr>
                         <td colSpan="6" className="px-6 py-10 text-center text-sm text-slate-500">
                           {hasActiveFilters
@@ -365,21 +380,23 @@ function App() {
                       ))
                     )}
                   </tbody>
-                  <tfoot>
-                    <tr className="bg-slate-900 text-white font-bold">
-                      <td colSpan="2" className="px-6 py-5 text-sm bold">
-                        TOTAL GENERAL
-                      </td>
-                      <td className="px-6 py-5 text-right text-emerald-400 bold">
-                        {transactions.totalRecettes.toLocaleString()} Ar
-                      </td>
-                      <td className="px-6 py-5 text-right text-rose-400 bold">
-                        {transactions.totalDepenses.toLocaleString()} Ar
-                      </td>
-                      <td className="px-6 py-5 text-right bold">{transactions.soldeFinal.toLocaleString()} Ar</td>
-                      <td className="px-6 py-5 text-right bold"></td>
-                    </tr>
-                  </tfoot>
+                  {!loading && transactions.items.length > 0 && (
+                    <tfoot>
+                      <tr className="bg-slate-900 text-white font-bold">
+                        <td colSpan="2" className="px-6 py-5 text-sm bold">
+                          TOTAL GENERAL
+                        </td>
+                        <td className="px-6 py-5 text-right text-emerald-400 bold">
+                          {transactions.totalRecettes.toLocaleString()} Ar
+                        </td>
+                        <td className="px-6 py-5 text-right text-rose-400 bold">
+                          {transactions.totalDepenses.toLocaleString()} Ar
+                        </td>
+                        <td className="px-6 py-5 text-right bold">{transactions.soldeFinal.toLocaleString()} Ar</td>
+                        <td className="px-6 py-5 text-right bold"></td>
+                      </tr>
+                    </tfoot>
+                  )}
                 </table>
               </div>
               <footer id='pdf-footer' className="print-only mt-3 text-sm print:fixed print:bottom-8 print:w-full print:text-center print:bg-red-500">
