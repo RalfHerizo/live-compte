@@ -13,6 +13,8 @@ export const useTransactionManager = (initialData = []) => {
     to: "",
   });
 
+  const [isAdding, setIsAdding] = useState(false);
+
   // 1. Charger les données au démarrage
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -67,6 +69,7 @@ export const useTransactionManager = (initialData = []) => {
     };
 
     try {
+      setIsAdding(true);
       const { data, error } = await supabase
         .from('transactions')
         .insert([transactionToSave])
@@ -78,6 +81,8 @@ export const useTransactionManager = (initialData = []) => {
       setTransactions((prev) => [...prev, data[0]]);
     } catch (error) {
       alert("Erreur lors de l'enregistrement : " + error.message);
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -109,6 +114,7 @@ export const useTransactionManager = (initialData = []) => {
     setDateFilter,
     addTransaction,
     deleteTransaction,
-    loading // Tu peux l'utiliser pour afficher un message "Chargement..." dans ton tableau
+    loading, // Tu peux l'utiliser pour afficher un message "Chargement..." dans ton tableau
+    isAdding
   };
 };

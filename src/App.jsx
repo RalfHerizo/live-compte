@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTransactionManager } from './hooks/useTransactionManager';
 import exportPDF from './core/finance';
 
@@ -16,7 +16,8 @@ function App() {
     dateFilter, 
     setDateFilter, 
     deleteTransaction, 
-    loading
+    loading,
+    isAdding
   } = useTransactionManager();
 
   const [formData, setFormData] = useState({
@@ -52,7 +53,7 @@ function App() {
       newErrors.montant = "Saisissez au moins un montant";
     }
 
-    // S'il y a des erreurs, on les affiche et on arrête tout
+    // S'il y a des erreurs, on les affiche et on arréte tout
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -93,7 +94,7 @@ function App() {
     }
 
     if (printDetails.dateFrom && printDetails.dateTo && printDetails.dateFrom > printDetails.dateTo) {
-      newErrors.general = "La date de début doit être antérieure ou égale à la date de fin.";
+      newErrors.general = "La date de début doit étre antérieure ou égale é la date de fin.";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -252,9 +253,21 @@ function App() {
 
                 <button
                   type="submit"
-                  className="w-full bg-slate-900 text-white py-3 font-bold hover:bg-slate-800 transition-colors mt-4"
+                  disabled={isAdding}
+                  className={`w-full py-3 font-bold transition-all mt-4 flex items-center justify-center gap-2 ${
+                    isAdding 
+                      ? 'bg-slate-400 cursor-not-allowed text-white' 
+                      : 'bg-slate-900 hover:bg-slate-800 text-white'
+                  }`}
                 >
-                  Ajouter a la liste
+                  {isAdding ? (
+                    <>
+                      <span className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
+                      Ajout en cours...
+                    </>
+                  ) : (
+                    <span className='uppercase' >Ajouter à la liste</span>
+                  )}
                 </button>
               </form>
             </div>
@@ -348,7 +361,10 @@ function App() {
                     {loading ? (
                       <tr>
                         <td colSpan="6" className="px-6 py-10 text-center text-sm text-slate-500 italic">
-                          Chargement des données depuis le cloud...
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="animate-spin inline-block w-4 h-4 border-2 border-slate-500 border-t-transparent rounded-full"></span>
+                            Chargement des données depuis le cloud...
+                          </div>
                         </td>
                       </tr>
                     ) : transactions.items.length === 0 ? (
@@ -411,3 +427,4 @@ function App() {
 }
 
 export default App;
+
