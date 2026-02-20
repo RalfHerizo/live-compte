@@ -4,11 +4,6 @@ import exportPDF from './core/finance';
 
 function App() {
   
-  // const initialTransactions = JSON.parse(localStorage.getItem('transactions')) || [];
-  // useEffect(() => {
-  //   localStorage.setItem('transactions', JSON.stringify(transactions.items));
-  // }, [transactions.items]);
-  
   const { 
     transactions, 
     setFilterLibelle, 
