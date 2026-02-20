@@ -355,7 +355,7 @@ function App() {
                   <tbody className="divide-y divide-slate-100">
                     {loading ? (
                       <tr>
-                        <td colSpan="6" className="px-6 py-10 text-center text-sm text-slate-500 italic">
+                        <td colSpan="6" className="px-6 py-10 text-center text-sm text-slate-500">
                           <div className="flex items-center justify-center gap-2">
                             <span className="animate-spin inline-block w-4 h-4 border-2 border-slate-500 border-t-transparent rounded-full"></span>
                             Chargement des données depuis le cloud...
