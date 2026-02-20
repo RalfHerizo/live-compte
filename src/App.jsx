@@ -106,6 +106,12 @@ function App() {
     setFilterLibelle('');
   };
 
+  const hasActiveFilters =
+    searchLibelle.trim() !== '' ||
+    dateFilter.mode !== 'all' ||
+    !!dateFilter.from ||
+    !!dateFilter.to;
+
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900">
       <div className="max-w-350 mx-auto">
@@ -330,24 +336,34 @@ function App() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {transactions.items.map((t) => (
-                      <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="px-6 py-4 text-slate-600 whitespace-nowrap text-sm">
-                          {new Date(t.date).toLocaleDateString('fr-FR')}
+                    {transactions.items.length === 0 ? (
+                      <tr>
+                        <td colSpan="6" className="px-6 py-10 text-center text-sm text-slate-500">
+                          {hasActiveFilters
+                            ? 'Aucun résultat trouvé pour les filtres actuels.'
+                            : "Aucune donnée pour le moment. Veuillez insérer une opération."}
                         </td>
-                        <td className="px-6 py-4 font-medium text-slate-900 text-sm italic">{t.libelle.toUpperCase()}</td>
-                        <td className="px-6 py-4 text-right text-emerald-600 font-bold text-sm">
-                          {t.recette > 0 ? `${t.recette.toLocaleString()} Ar` : '-'}
-                        </td>
-                        <td className="px-6 py-4 text-right text-rose-600 font-bold text-sm">
-                          {t.depense > 0 ? `${t.depense.toLocaleString()} Ar` : '-'}
-                        </td>
-                        <td className="px-6 py-4 text-right font-black text-slate-900 bg-slate-50/30 text-sm">
-                          {t.solde.toLocaleString()} Ar
-                        </td>
-                        <td className='px-2' > <button className='bg-red-500 hover:bg-red-600 hover:cursor-pointer text-center w-full uppercase py-2 text-gray-50' key={t.id} onClick={()=>deleteTransaction(t.id)} >supprimer</button> </td>
                       </tr>
-                    ))}
+                    ) : (
+                      transactions.items.map((t) => (
+                        <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
+                          <td className="px-6 py-4 text-slate-600 whitespace-nowrap text-sm">
+                            {new Date(t.date).toLocaleDateString('fr-FR')}
+                          </td>
+                          <td className="px-6 py-4 font-medium text-slate-900 text-sm italic">{t.libelle.toUpperCase()}</td>
+                          <td className="px-6 py-4 text-right text-emerald-600 font-bold text-sm">
+                            {t.recette > 0 ? `${t.recette.toLocaleString()} Ar` : '-'}
+                          </td>
+                          <td className="px-6 py-4 text-right text-rose-600 font-bold text-sm">
+                            {t.depense > 0 ? `${t.depense.toLocaleString()} Ar` : '-'}
+                          </td>
+                          <td className="px-6 py-4 text-right font-black text-slate-900 bg-slate-50/30 text-sm">
+                            {t.solde.toLocaleString()} Ar
+                          </td>
+                          <td className='px-2' > <button className='bg-red-500 hover:bg-red-600 hover:cursor-pointer text-center w-full uppercase py-2 text-gray-50' key={t.id} onClick={()=>deleteTransaction(t.id)} >supprimer</button> </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                   <tfoot>
                     <tr className="bg-slate-900 text-white font-bold">
