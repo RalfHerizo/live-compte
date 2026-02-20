@@ -12,7 +12,8 @@ function App() {
     setDateFilter, 
     deleteTransaction, 
     loading,
-    isAdding
+    isAdding,
+    isDeleting
   } = useTransactionManager();
 
   const [formData, setFormData] = useState({
@@ -386,7 +387,7 @@ function App() {
                           <td className="px-6 py-4 text-right font-black text-slate-900 bg-slate-50/30 text-sm">
                             {t.solde.toLocaleString()} Ar
                           </td>
-                          <td className='px-2' > <button className='bg-red-500 hover:bg-red-600 hover:cursor-pointer text-center w-full uppercase py-2 text-gray-50' key={t.id} onClick={()=>deleteTransaction(t.id)} >supprimer</button> </td>
+                          <td className='px-2' > <button disabled={isDeleting} className={`text-center w-full uppercase py-2 text-xs text-gray-50 ${isDeleting ? 'bg-red-300 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600 hover:cursor-pointer'}`} key={t.id} onClick={()=>deleteTransaction(t.id)} >supprimer</button> </td>
                         </tr>
                       ))
                     )}
@@ -417,6 +418,14 @@ function App() {
           </main>
         </div>
       </div>
+      {isDeleting && (
+        <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center no-print">
+          <div className="bg-white px-6 py-4 shadow-lg flex items-center gap-3 text-slate-700">
+            <span className="animate-spin inline-block w-5 h-5 border-2 border-slate-600 border-t-transparent rounded-full"></span>
+            Suppression en cours...
+          </div>
+        </div>
+      )}
     </div>
   );
 }

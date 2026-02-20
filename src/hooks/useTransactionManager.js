@@ -14,6 +14,7 @@ export const useTransactionManager = (initialData = []) => {
   });
 
   const [isAdding, setIsAdding] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // 1. Charger les données au démarrage
   useEffect(() => {
@@ -92,6 +93,7 @@ export const useTransactionManager = (initialData = []) => {
     if (!window.confirm("Voulez-vous vraiment supprimer cette opération ?")) return;
 
     try {
+      setIsDeleting(true);
       const { error } = await supabase
         .from('transactions')
         .delete()
@@ -103,6 +105,8 @@ export const useTransactionManager = (initialData = []) => {
       setTransactions(prev => prev.filter(t => t.id !== id));
     } catch (error) {
       alert("Erreur lors de la suppression : " + error.message);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -115,6 +119,7 @@ export const useTransactionManager = (initialData = []) => {
     addTransaction,
     deleteTransaction,
     loading, // Tu peux l'utiliser pour afficher un message "Chargement..." dans ton tableau
-    isAdding
+    isAdding,
+    isDeleting
   };
 };

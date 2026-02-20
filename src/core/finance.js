@@ -146,23 +146,31 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
   const tableData = transactions.map((t) => [
     new Date(t.date).toLocaleDateString('fr-FR'),
     t.libelle.toUpperCase(),
-    t.recette > 0 ? `${t.recette.toLocaleString()} Ar` : '-',
-    t.depense > 0 ? `${t.depense.toLocaleString()} Ar` : '-',
-    t.solde.toLocaleString() + ' Ar',
+    t.recette > 0 ? `${t.recette.toLocaleString()}\u00A0Ar` : '-',
+    t.depense > 0 ? `${t.depense.toLocaleString()}\u00A0Ar` : '-',
+    `${t.solde.toLocaleString()}\u00A0Ar`,
   ]);
 
   const totalRow = [
     'TOTAL GENERAL',
     '',
-    `${transactions.reduce((sum, t) => sum + (t.recette || 0), 0).toLocaleString()} Ar`,
-    `${transactions.reduce((sum, t) => sum + (t.depense || 0), 0).toLocaleString()} Ar`,
-    `${transactions[transactions.length - 1]?.solde.toLocaleString()} Ar`,
+    `${transactions.reduce((sum, t) => sum + (t.recette || 0), 0).toLocaleString()}\u00A0Ar`,
+    `${transactions.reduce((sum, t) => sum + (t.depense || 0), 0).toLocaleString()}\u00A0Ar`,
+    `${transactions[transactions.length - 1]?.solde.toLocaleString()}\u00A0Ar`,
   ];
 
   autoTable(doc, {
     head: [['Date', 'Libellé', 'Recettes', 'Dépenses', 'Solde'].map( header=> header.toUpperCase())],
     body: [...tableData, totalRow],
     startY: 25, // Leave space for the header
+    styles: {
+      fontSize: 9,
+    },
+    columnStyles: {
+      2: { halign: 'right', cellWidth: 32, minCellWidth: 32 },
+      3: { halign: 'right', cellWidth: 32, minCellWidth: 32 },
+      4: { halign: 'right', cellWidth: 32, minCellWidth: 32 },
+    },
     headStyles: {
       fillColor: [26, 26, 26], // Noir en RGB
       textColor: [255, 255, 255], // Texte en blanc pour le contraste
@@ -176,6 +184,9 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
         data.cell.styles.fontStyle = 'bold';
         data.cell.styles.fillColor = [26, 26, 26];
         data.cell.styles.textColor = [255, 255, 255];
+        if (data.column.index >= 2 && data.column.index <= 4) {
+          data.cell.styles.halign = 'right';
+        }
       }
     },
 
