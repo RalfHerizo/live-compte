@@ -3,6 +3,8 @@ import { useTransactionManager } from './hooks/useTransactionManager';
 import exportPDF from './core/finance';
 
 function App() {
+
+  const app_title = import.meta.env.VITE_APP_TITLE;
   
   const { 
     transactions, 
@@ -123,7 +125,7 @@ function App() {
       <div className="max-w-350 mx-auto">
         <header className="grid grid-cols-1 md:grid-cols-4 mb-6 gap-6 md:gap-10 items-end no-print">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Live Compte</h1>
+            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">{app_title}</h1>
             <p className="text-slate-500">Gestion de tresorerie en temps reel</p>
           </div>
 
@@ -253,7 +255,7 @@ function App() {
                   className={`w-full py-3 font-bold transition-all mt-4 flex items-center justify-center gap-2 ${
                     isAdding 
                       ? 'bg-slate-400 cursor-not-allowed text-white' 
-                      : 'bg-slate-900 hover:bg-slate-800 text-white'
+                      : 'bg-slate-900 hover:cursor-pointer hover:bg-slate-800 text-white'
                   }`}
                 >
                   {isAdding ? (
