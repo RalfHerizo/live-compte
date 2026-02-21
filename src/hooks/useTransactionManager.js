@@ -89,9 +89,6 @@ export const useTransactionManager = (initialData = []) => {
 
   // 4. Supprimer une transaction sur Supabase
   const deleteTransaction = async (id) => {
-    // Petit message de confirmation par sécurité
-    if (!window.confirm("Voulez-vous vraiment supprimer cette opération ?")) return;
-
     try {
       setIsDeleting(true);
       const { error } = await supabase

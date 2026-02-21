@@ -34,6 +34,11 @@ function App() {
   const [errors, setErrors] = useState({});
   const [exportErrors, setExportErrors] = useState({});
   const [searchLibelle, setSearchLibelle] = useState('');
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    transactionId: null,
+    transactionLabel: '',
+  });
 
 
   const handleSubmit = (e) => {
@@ -112,6 +117,33 @@ function App() {
   const clearSearch = () => {
     setSearchLibelle('');
     setFilterLibelle('');
+  };
+
+  const openDeleteModal = (transaction) => {
+    setDeleteModal({
+      isOpen: true,
+      transactionId: transaction.id,
+      transactionLabel: transaction.libelle,
+    });
+  };
+
+  const closeDeleteModal = () => {
+    if (isDeleting) return;
+    setDeleteModal({
+      isOpen: false,
+      transactionId: null,
+      transactionLabel: '',
+    });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteModal.transactionId) return;
+    await deleteTransaction(deleteModal.transactionId);
+    setDeleteModal({
+      isOpen: false,
+      transactionId: null,
+      transactionLabel: '',
+    });
   };
 
   const hasActiveFilters =
@@ -389,7 +421,7 @@ function App() {
                           <td className="px-6 py-4 text-right font-black text-slate-900 bg-slate-50/30 text-sm">
                             {t.solde.toLocaleString()} Ar
                           </td>
-                          <td className='px-2' > <button disabled={isDeleting} className={`text-center w-full uppercase py-2 text-xs text-gray-50 ${isDeleting ? 'bg-red-300 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600 hover:cursor-pointer'}`} key={t.id} onClick={()=>deleteTransaction(t.id)} >supprimer</button> </td>
+                          <td className='px-2' > <button disabled={isDeleting} className={`text-center w-full uppercase py-2 text-xs text-gray-50 ${isDeleting ? 'bg-red-300 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600 hover:cursor-pointer'}`} key={t.id} onClick={() => openDeleteModal(t)} >supprimer</button> </td>
                         </tr>
                       ))
                     )}
@@ -420,6 +452,46 @@ function App() {
           </main>
         </div>
       </div>
+      {deleteModal.isOpen && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-900/50 p-4 no-print">
+          <div className="w-full max-w-md overflow-hidden bg-white shadow-xl border border-slate-200">
+            <div className="border-b border-slate-200 px-5 py-4">
+              <h3 className="text-base font-bold uppercase text-slate-900">Confirmer la suppression</h3>
+              <p className="mt-2 text-sm text-slate-600">
+                Voulez-vous vraiment supprimer l&apos;operation
+                {deleteModal.transactionLabel ? (
+                  <span className="font-semibold text-slate-900"> {deleteModal.transactionLabel}</span>
+                ) : (
+                  ''
+                )}
+                {' '}?
+              </p>
+            </div>
+            <div className="flex justify-end gap-3 bg-slate-50 px-5 py-4">
+              <button
+                type="button"
+                onClick={closeDeleteModal}
+                disabled={isDeleting}
+                className={`px-4 py-2 text-sm font-semibold border border-slate-300 text-slate-700 ${
+                  isDeleting ? 'opacity-60 cursor-not-allowed' : 'hover:bg-slate-100 hover:cursor-pointer'
+                }`}
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                onClick={confirmDelete}
+                disabled={isDeleting}
+                className={`px-4 py-2 text-sm font-semibold text-white ${
+                  isDeleting ? 'bg-rose-300 cursor-not-allowed' : 'bg-rose-600 hover:bg-rose-700 hover:cursor-pointer'
+                }`}
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {isDeleting && (
         <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center no-print">
           <div className="bg-white px-6 py-4 shadow-lg flex items-center gap-3 text-slate-700">
