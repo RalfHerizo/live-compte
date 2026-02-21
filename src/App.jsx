@@ -262,54 +262,88 @@ function App() {
           }`}
         >
           <div className="max-w-350 mx-auto  md:px-8 p-4">
-            <div className="grid grid-cols-2 gap-3 md:items-end">
-              <div className="">
-                <label className="block text-xs font-bold uppercase text-slate-900 mb-2">
-                  Filtrer par libelle
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Rechercher..."
-                    value={searchLibelle}
-                    className="w-full px-3 py-2 pr-8 bg-slate-50 border border-slate-50 rounded text-slate-900 placeholder:text-slate-400 outline-none"
-                    onChange={(e) => handleSearchChange(e.target.value)}
-                  />
-                  {searchLibelle && (
-                    <button
-                      type="button"
-                      onClick={clearSearch}
-                      className="absolute inset-y-0 right-2 text-slate-400 hover:text-slate-500 hover:cursor-pointer"
-                      aria-label="Effacer la recherche"
-                    >
-                      <svg
-                        width="24"
-                        height="25"
-                        viewBox="0 0 24 25"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+            <div >
+              <div className="grid grid-cols-2 gap-3 md:items-end" >
+                <div className="">
+                  <label className="block text-xs font-bold uppercase text-slate-900 mb-2">
+                    Filtrer par libelle
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Rechercher..."
+                      value={searchLibelle}
+                      className="w-full px-3 py-2 pr-8 bg-slate-50 border border-slate-50 rounded text-slate-900 placeholder:text-slate-400 outline-none"
+                      onChange={(e) => handleSearchChange(e.target.value)}
+                    />
+                    {searchLibelle && (
+                      <button
+                        type="button"
+                        onClick={clearSearch}
+                        className="absolute inset-y-0 right-2 text-slate-400 hover:text-slate-500 hover:cursor-pointer"
+                        aria-label="Effacer la recherche"
                       >
-                        <path
-                          d="M2 12.3906C2 6.86778 6.47715 2.39062 12 2.39062C17.5228 2.39062 22 6.86778 22 12.3906C22 17.9135 17.5228 22.3906 12 22.3906C6.47715 22.3906 2 17.9135 2 12.3906ZM8.78362 10.2354L10.9388 12.3906L8.78362 14.5458C8.49073 14.8387 8.49073 15.3136 8.78362 15.6065C9.07652 15.8994 9.55139 15.8994 9.84428 15.6065L11.9995 13.4513L14.1546 15.6064C14.4475 15.8993 14.9224 15.8993 15.2153 15.6064C15.5082 15.3135 15.5082 14.8387 15.2153 14.5458L13.0602 12.3906L15.2153 10.2355C15.5082 9.94258 15.5082 9.46771 15.2153 9.17482C14.9224 8.88192 14.4475 8.88192 14.1546 9.17482L11.9995 11.33L9.84428 9.17475C9.55139 8.88186 9.07652 8.88186 8.78362 9.17475C8.49073 9.46764 8.49073 9.94251 8.78362 10.2354Z"
-                          fill="#94A3B8"
-                        />
-                      </svg>
-                    </button>
-                  )}
+                        <svg
+                          width="24"
+                          height="25"
+                          viewBox="0 0 24 25"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M2 12.3906C2 6.86778 6.47715 2.39062 12 2.39062C17.5228 2.39062 22 6.86778 22 12.3906C22 17.9135 17.5228 22.3906 12 22.3906C6.47715 22.3906 2 17.9135 2 12.3906ZM8.78362 10.2354L10.9388 12.3906L8.78362 14.5458C8.49073 14.8387 8.49073 15.3136 8.78362 15.6065C9.07652 15.8994 9.55139 15.8994 9.84428 15.6065L11.9995 13.4513L14.1546 15.6064C14.4475 15.8993 14.9224 15.8993 15.2153 15.6064C15.5082 15.3135 15.5082 14.8387 15.2153 14.5458L13.0602 12.3906L15.2153 10.2355C15.5082 9.94258 15.5082 9.46771 15.2153 9.17482C14.9224 8.88192 14.4475 8.88192 14.1546 9.17482L11.9995 11.33L9.84428 9.17475C9.55139 8.88186 9.07652 8.88186 8.78362 9.17475C8.49073 9.46764 8.49073 9.94251 8.78362 10.2354Z"
+                            fill="#94A3B8"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="">
+                  <label className="block text-xs font-bold uppercase text-slate-900 mb-2">
+                    Type date
+                  </label>
+                  <select
+                    value={dateFilter.mode}
+                    onChange={(e) => handleDateModeChange(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-50 rounded text-slate-900 outline-none"
+                  >
+                    <option value="all">Toutes</option>
+                    <option value="range">Entre 2 dates</option>
+                  </select>
                 </div>
               </div>
-              <div className="">
-                <label className="block text-xs font-bold uppercase text-slate-900 mb-2">
-                  Type date
-                </label>
-                <select
-                  value={dateFilter.mode}
-                  onChange={(e) => handleDateModeChange(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-50 rounded text-slate-900 outline-none"
-                >
-                  <option value="all">Toutes</option>
-                  <option value="range">Entre 2 dates</option>
-                </select>
+              <div className="grid grid-cols-2 gap-3 my-3">
+                {dateFilter.mode === "range" && (
+                  <>
+                    <div className="md:col-span-1">
+                      <label className="block text-xs font-bold uppercase text-slate-900 mb-2">
+                        Date debut
+                      </label>
+                      <input
+                        type="date"
+                        value={dateFilter.from}
+                        onChange={(e) =>
+                          handleDateFilterChange("from", e.target.value)
+                        }
+                        className="w-full px-3 py-2 text-slate-900 bg-slate-50 border border-slate-200 outline-none"
+                      />
+                    </div>
+                    <div className="md:col-span-1">
+                      <label className="block text-xs font-bold uppercase text-slate-900 mb-2">
+                        Date fin
+                      </label>
+                      <input
+                        type="date"
+                        value={dateFilter.to}
+                        onChange={(e) =>
+                          handleDateFilterChange("to", e.target.value)
+                        }
+                        className="w-full px-3 py-2 text-slate-900 bg-slate-50 border border-slate-200 outline-none"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
               {/* <div className="md:col-span-3">
                 <button
@@ -458,39 +492,8 @@ function App() {
           </aside>
 
           <main className="lg:col-span-3 overflow-x-auto">
-            <div className="grid grid-cols-2 gap-3 mb-3">
-              {dateFilter.mode === "range" && (
-                <>
-                  <div className="md:col-span-1">
-                    <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
-                      Date debut
-                    </label>
-                    <input
-                      type="date"
-                      value={dateFilter.from}
-                      onChange={(e) =>
-                        handleDateFilterChange("from", e.target.value)
-                      }
-                      className="w-full px-3 py-2 bg-white border border-slate-200 outline-none"
-                    />
-                  </div>
-                  <div className="md:col-span-1">
-                    <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
-                      Date fin
-                    </label>
-                    <input
-                      type="date"
-                      value={dateFilter.to}
-                      onChange={(e) =>
-                        handleDateFilterChange("to", e.target.value)
-                      }
-                      className="w-full px-3 py-2 bg-white border border-slate-200 outline-none"
-                    />
-                  </div>
-                </>
-              )}
-            </div>
-            <div className="table-parent-container bg-white  overflow-hidden shadow-sm py-3">
+            
+            <div className="table-parent-container bg-slate-200 rounded overflow-hidden shadow-sm ">
               <div className="print-only">
                 <h2 className="text-center mb-4">
                   {/* Résidence <strong className='uppercase'>la félicité</strong> Ambatoroaka
@@ -510,7 +513,7 @@ function App() {
                             });
                             if (exportErrors.general) setExportErrors({});
                           }}
-                          className="mx-2 inline-block border-gray-400 bg-slate-200 outline-none text-center w-40 p-1"
+                          className="mx-2 inline-block border-gray-400 bg-slate-50 outline-none text-center w-40 p-1"
                         />
                         de
                         <input
@@ -523,7 +526,7 @@ function App() {
                             });
                             if (exportErrors.general) setExportErrors({});
                           }}
-                          className="mx-2 inline-block bg-slate-200 border-gray-400 outline-none text-center w-40 p-1"
+                          className="mx-2 inline-block bg-slate-50 border-gray-400 outline-none text-center w-40 p-1"
                         />
                         au
                         <input
@@ -536,7 +539,7 @@ function App() {
                             });
                             if (exportErrors.general) setExportErrors({});
                           }}
-                          className=" mx-2 inline-block bg-slate-200 border-gray-400 outline-none text-center w-40 p-1"
+                          className=" mx-2 inline-block bg-slate-50 border-gray-400 outline-none text-center w-40 p-1"
                         />
                       </div>
                       <div className="0">
@@ -614,7 +617,7 @@ function App() {
                       transactions.items.map((t) => (
                         <tr
                           key={t.id}
-                          className="odd:bg-slate-100 hover:bg-slate-50/50 transition-colors"
+                          className="odd:bg-slate-100 hover:bg-slate-300 transition-colors"
                         >
                           <td className="px-6 py-4 text-slate-600 whitespace-nowrap text-sm">
                             {new Date(t.date).toLocaleDateString("fr-FR")}
@@ -632,7 +635,7 @@ function App() {
                               ? `${t.depense.toLocaleString()} Ar`
                               : "-"}
                           </td>
-                          <td className="px-6 py-4 text-right font-black text-slate-900 bg-slate-50/30 text-sm">
+                          <td className="px-6 py-4 text-right font-black text-slate-900  text-sm">
                             {t.solde.toLocaleString()} Ar
                           </td>
                           {isAdmin && (
@@ -659,7 +662,7 @@ function App() {
                   {!loading && transactions.items.length > 0 && (
                     <tfoot>
                       <tr className="bg-slate-900 text-white font-bold">
-                        <td colSpan="2" className="px-6 py-5 text-sm bold">
+                        <td colSpan="2" className="rounded-bl px-6 py-5 text-sm bold">
                           TOTAL
                         </td>
                         <td className="px-6 py-5 text-right text-emerald-400 bold">
@@ -672,7 +675,7 @@ function App() {
                           {transactions.soldeFinal.toLocaleString()} Ar
                         </td>
                         {isAdmin && (
-                          <td className="px-6 py-5 text-right bold"></td>
+                          <td className="px-6 py-5 text-right bold rounded-br"></td>
                         )}
                       </tr>
                     </tfoot>
