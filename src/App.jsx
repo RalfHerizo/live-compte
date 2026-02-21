@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTransactionManager } from './hooks/useTransactionManager';
 import exportPDF from './core/finance';
+import Login from './components/Login';
+import { supabase } from './lib/supabaseClient';
 
 function App() {
 
   const app_title = import.meta.env.VITE_APP_TITLE;
+  const adminEmails = (import.meta.env.VITE_ADMIN_EMAILS || '')
+    .split(',')
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+  const [session, setSession] = useState(null);
   
   const { 
     transactions, 
@@ -16,7 +23,7 @@ function App() {
     loading,
     isAdding,
     isDeleting
-  } = useTransactionManager();
+  } = useTransactionManager([], session);
 
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
@@ -34,11 +41,24 @@ function App() {
   const [errors, setErrors] = useState({});
   const [exportErrors, setExportErrors] = useState({});
   const [searchLibelle, setSearchLibelle] = useState('');
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     transactionId: null,
     transactionLabel: '',
   });
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
 
   const handleSubmit = (e) => {
@@ -119,6 +139,15 @@ function App() {
     setFilterLibelle('');
   };
 
+  const handleSignOut = async () => {
+    try {
+      setIsSigningOut(true);
+      await supabase.auth.signOut();
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
+
   const openDeleteModal = (transaction) => {
     setDeleteModal({
       isOpen: true,
@@ -152,6 +181,10 @@ function App() {
     !!dateFilter.from ||
     !!dateFilter.to;
 
+  if (!session) return <Login />;
+
+  const isAdmin = adminEmails.includes((session.user.email || '').trim().toLowerCase());
+
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900">
       <div className="max-w-350 mx-auto">
@@ -161,7 +194,7 @@ function App() {
             <p className="text-slate-500">Gestion de tresorerie en temps reel</p>
           </div>
 
-          <div className="col-span-1 md:col-span-3 max-w-full grid grid-cols-1 md:grid-cols-6 gap-3">
+          <div className="col-span-1 md:col-span-3 max-w-full grid grid-cols-1 md:grid-cols-7 gap-3">
             <div className="md:col-span-3">
               <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Filtrer par libelle</label>
               <div className="relative">
@@ -204,6 +237,18 @@ function App() {
               className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 font-medium transition-all shadow-lg active:scale-95 md:col-span-1"
             >
               Exporter PDF
+            </button>
+            <button
+              type="button"
+              onClick={handleSignOut}
+              disabled={isSigningOut}
+              className={`px-4 py-3 font-medium transition-all md:col-span-1 ${
+                isSigningOut
+                  ? 'bg-slate-300 text-slate-600 cursor-not-allowed'
+                  : 'bg-slate-200 text-slate-800 hover:bg-slate-300 hover:cursor-pointer'
+              }`}
+            >
+              {isSigningOut ? 'Déconnexion...' : 'Déconnexion'}
             </button>
           </div>
         </header>
@@ -384,13 +429,15 @@ function App() {
                       <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Recettes</th>
                       <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Depenses</th>
                       <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Solde</th>
-                      <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Actions</th>
+                      {isAdmin && (
+                        <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">Actions</th>
+                      )}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {loading ? (
                       <tr>
-                        <td colSpan="6" className="px-6 py-10 text-center text-sm text-slate-500">
+                        <td colSpan={isAdmin ? 6 : 5} className="px-6 py-10 text-center text-sm text-slate-500">
                           <div className="flex items-center justify-center gap-2">
                             <span className="animate-spin inline-block w-4 h-4 border-2 border-slate-500 border-t-transparent rounded-full"></span>
                             Chargement des données depuis le cloud...
@@ -399,7 +446,7 @@ function App() {
                       </tr>
                     ) : transactions.items.length === 0 ? (
                       <tr>
-                        <td colSpan="6" className="px-6 py-10 text-center text-sm text-slate-500">
+                        <td colSpan={isAdmin ? 6 : 5} className="px-6 py-10 text-center text-sm text-slate-500">
                           {hasActiveFilters
                             ? 'Aucun résultat trouvé pour les filtres actuels.'
                             : "Aucune donnée pour le moment. Veuillez insérer une opération."}
@@ -421,7 +468,9 @@ function App() {
                           <td className="px-6 py-4 text-right font-black text-slate-900 bg-slate-50/30 text-sm">
                             {t.solde.toLocaleString()} Ar
                           </td>
-                          <td className='px-2' > <button disabled={isDeleting} className={`text-center w-full uppercase py-2 text-xs text-gray-50 ${isDeleting ? 'bg-red-300 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600 hover:cursor-pointer'}`} key={t.id} onClick={() => openDeleteModal(t)} >supprimer</button> </td>
+                          {isAdmin && (
+                            <td className='px-2' > <button disabled={isDeleting} className={`text-center w-full uppercase py-2 text-xs text-gray-50 ${isDeleting ? 'bg-red-300 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600 hover:cursor-pointer'}`} key={t.id} onClick={() => openDeleteModal(t)} >supprimer</button> </td>
+                          )}
                         </tr>
                       ))
                     )}
@@ -439,7 +488,7 @@ function App() {
                           {transactions.totalDepenses.toLocaleString()} Ar
                         </td>
                         <td className="px-6 py-5 text-right bold">{transactions.soldeFinal.toLocaleString()} Ar</td>
-                        <td className="px-6 py-5 text-right bold"></td>
+                        {isAdmin && <td className="px-6 py-5 text-right bold"></td>}
                       </tr>
                     </tfoot>
                   )}

@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { supabase } from '../lib/supabaseClient';
 import { computeBalances, filterTransactionsByDate } from "../core/finance";
 
-export const useTransactionManager = (initialData = []) => {
+export const useTransactionManager = (initialData = [], session = null) => {
   const [transactions, setTransactions] = useState(initialData);
   const [filterLibelle, setFilterLibelle] = useState("");
   const [loading, setLoading] = useState(true); // Pour gérer l'état de chargement
@@ -18,6 +18,12 @@ export const useTransactionManager = (initialData = []) => {
 
   // 1. Charger les données au démarrage
   useEffect(() => {
+    if (!session) {
+      setTransactions([]);
+      setLoading(false);
+      return;
+    }
+
     const fetchTransactions = async () => {
       try {
         setLoading(true);
@@ -36,7 +42,7 @@ export const useTransactionManager = (initialData = []) => {
     };
 
     fetchTransactions();
-  }, []);
+  }, [session]);
 
   // 2. Logique de filtrage et calcul (inchangée, mais réactive aux données de la DB)
   const processedData = useMemo(() => {
