@@ -279,25 +279,24 @@ function App() {
         </div>
       </header>
       <div className="max-w-350 mx-auto p-4 md:p-8">
-
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <aside className="lg:col-span-1 no-print">
-            <div className="bg-white p-6 sticky top-8">
-              <h2 className="text-xl font-bold mb-6 border-b pb-2">Nouvelle Operation</h2>
+            <div className="bg-slate-900 rounded-lg p-1 sticky top-8">
+              <h2 className="text-xl font-bold my-3 pb-2 text-gray-50 text-center">Nouvelle Opération</h2>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4 p-3 rounded bg-slate-200">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-500 mb-1">Date</label>
+                  <label className="block text-xs font-bold uppercase text-slate-900 mb-1">Date</label>
                   <input
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-300 outline-none focus:ring-2 focus:ring-slate-900"
+                    className="w-full px-3 py-2 bg-slate-50 rounded  outline-none focus:bg-white"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-slate-500 mb-1">Libelle</label>
+                  <label className="block text-xs font-bold uppercase text-slate-900 mb-1">Libelle</label>
                   {errors.libelle && (
                     <span className="text-rose-500 text-[10px] font-bold animate-bounce block mb-1">
                       {errors.libelle}
@@ -314,7 +313,7 @@ function App() {
                       if(errors.libelle) setErrors({...errors, libelle: null});
                     }
                   }
-                    className="w-full px-3 py-2 border border-slate-300 outline-none focus:ring-2 focus:ring-slate-900"
+                    className="w-full px-3 py-2 bg-slate-50 outline-none rounded focus:bg-white"
                     required
                   />
                 </div>
@@ -331,7 +330,7 @@ function App() {
                       value={formData.recette}
                       onChange={(e) => handleRecetteChange(e.target.value)}
                       disabled={!!formData.depense}
-                      className="w-full px-3 py-2 border border-slate-300 outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 bg-slate-50 outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
                   <div>
@@ -343,7 +342,7 @@ function App() {
                       value={formData.depense}
                       onChange={(e) => handleDepenseChange(e.target.value)}
                       disabled={!!formData.recette}
-                      className="w-full px-3 py-2 border border-slate-300 outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full px-3 py-2 bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500"
                     />
                   </div>
                   <div className="col-span-2">
@@ -356,7 +355,7 @@ function App() {
                 <button
                   type="submit"
                   disabled={isAdding}
-                  className={`w-full py-3 font-bold transition-all mt-4 flex items-center justify-center gap-2 ${
+                  className={`w-full py-3 transition-all mt-4 flex items-center justify-center gap-2 rounded ${
                     isAdding 
                       ? 'bg-slate-400 cursor-not-allowed text-white' 
                       : 'bg-slate-900 hover:cursor-pointer hover:bg-slate-800 text-white'
@@ -368,7 +367,7 @@ function App() {
                       Ajout en cours...
                     </>
                   ) : (
-                    <span className='uppercase' >Ajouter à  la liste</span>
+                    <span >Ajouter à  la liste</span>
                   )}
                 </button>
               </form>
