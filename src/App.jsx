@@ -230,8 +230,8 @@ function App() {
         </div>
         <div className={`overflow-hidden transition-all duration-300 bg-slate-200 ${showToolbar ? 'max-h-56 opacity-100 border-t border-slate-700' : 'max-h-0 opacity-0'}`}>
           <div className="max-w-350 mx-auto  md:px-8 p-4">
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-12 md:items-end">
-              <div className="md:col-span-6">
+            <div className="grid grid-cols-2 gap-3 md:items-end">
+              <div className="">
                 <label className="block text-xs font-bold uppercase text-slate-900 mb-2">Filtrer par libelle</label>
                 <div className="relative">
                   <input
@@ -255,7 +255,7 @@ function App() {
                   )}
                 </div>
               </div>
-              <div className="md:col-span-3">
+              <div className="">
                 <label className="block text-xs font-bold uppercase text-slate-900 mb-2">Type date</label>
                 <select
                   value={dateFilter.mode}
@@ -266,14 +266,14 @@ function App() {
                   <option value="range">Entre 2 dates</option>
                 </select>
               </div>
-              <div className="md:col-span-3">
+              {/* <div className="md:col-span-3">
                 <button
                   onClick={handleExportPDF}
                   className="w-full bg-slate-800 hover:bg-slate-900 hover:cursor-pointer text-slate-50 px-5 py-2.5 font-semibold transition-all rounded"
                 >
                   Exporter PDF
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -281,10 +281,10 @@ function App() {
       <div className="max-w-350 mx-auto p-4 md:p-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <aside className="lg:col-span-1 no-print">
-            <div className="bg-slate-900 rounded-lg p-1 sticky top-8">
-              <h2 className="text-xl font-bold my-3 pb-2 text-gray-50 text-center">Nouvelle Opération</h2>
+            <div className="bg-slate-200 rounded-lg  sticky top-8">
+              <h2 className="text-lg my-3 py-5   text-slate-50 font-bold text-center bg-slate-900 rounded-t">Nouvelle Opération</h2>
 
-              <form onSubmit={handleSubmit} className="space-y-4 p-3 rounded bg-slate-200">
+              <form onSubmit={handleSubmit} className="space-y-4 p-3 rounded ">
                 <div>
                   <label className="block text-xs font-bold uppercase text-slate-900 mb-1">Date</label>
                   <input
@@ -372,7 +372,7 @@ function App() {
                 </button>
               </form>
             </div>
-          </aside>
+          </aside>          
 
           <main className="lg:col-span-3 overflow-x-auto">
             <div className='grid grid-cols-2 gap-3 mb-3' >
@@ -400,45 +400,57 @@ function App() {
               )}
             </div>
             <div className="table-parent-container bg-white  overflow-hidden shadow-sm py-3">
-              <div className="print-only flex justify-center">
-                <h2 className="text-center text-lg mb-4">
-                  Résidence <strong className='uppercase'>la félicité</strong> Ambatoroaka
-                  <br />
-                  <div className='my-3'>
-                    Facture du 
-                    <input
-                      type="text"
-                      placeholder="Libellé"
-                      value={printDetails.libelle}
-                      onChange={(e) => {
-                        setPrintDetails({ ...printDetails, libelle: e.target.value });
-                        if (exportErrors.general) setExportErrors({});
-                      }}
-                      className="inline-block border-b border-gray-400 outline-none text-center w-40 font-bold"
-                    />
-                    de
-                    <input
-                      type="date"
-                      value={printDetails.dateFrom}
-                      onChange={(e) => {
-                        setPrintDetails({ ...printDetails, dateFrom: e.target.value });
-                        if (exportErrors.general) setExportErrors({});
-                      }}
-                      className="mx-2 inline-block border-b border-gray-400 outline-none text-center w-40 font-bold"
-                    />
-                    au 
-                    <input
-                      type="date"
-                      value={printDetails.dateTo}
-                      onChange={(e) => {
-                        setPrintDetails({ ...printDetails, dateTo: e.target.value });
-                        if (exportErrors.general) setExportErrors({});
-                      }}
-                      className=" mx-2 inline-block border-b border-gray-400 outline-none text-center w-40 font-bold"
-                    />
-                    {exportErrors.general && (
-                      <p className="text-rose-500 text-[11px] font-bold mt-2">{exportErrors.general}</p>
-                    )}
+              <div className="print-only">
+                <h2 className="text-center mb-4">
+                  {/* Résidence <strong className='uppercase'>la félicité</strong> Ambatoroaka
+                  <br /> */}
+                  <div className='my-3  mx-5'>
+                    <div className='grid grid-cols-4 items-center ' >
+                      <div className='col-span-3 flex items-center justify-start ' >
+                        Facture du 
+                        <input
+                          type="text"
+                          placeholder="Libellé"
+                          value={printDetails.libelle}
+                          onChange={(e) => {
+                            setPrintDetails({ ...printDetails, libelle: e.target.value });
+                            if (exportErrors.general) setExportErrors({});
+                          }}
+                          className="mx-2 inline-block border-gray-400 bg-slate-200 outline-none text-center w-40 p-1"
+                        />
+                        de
+                        <input
+                          type="date"
+                          value={printDetails.dateFrom}
+                          onChange={(e) => {
+                            setPrintDetails({ ...printDetails, dateFrom: e.target.value });
+                            if (exportErrors.general) setExportErrors({});
+                          }}
+                          className="mx-2 inline-block bg-slate-200 border-gray-400 outline-none text-center w-40 p-1"
+                        />
+                        au 
+                        <input
+                          type="date"
+                          value={printDetails.dateTo}
+                          onChange={(e) => {
+                            setPrintDetails({ ...printDetails, dateTo: e.target.value });
+                            if (exportErrors.general) setExportErrors({});
+                          }}
+                          className=" mx-2 inline-block bg-slate-200 border-gray-400 outline-none text-center w-40 p-1"
+                        />
+                      </div>
+                      <div className="0">
+                        <button
+                          onClick={handleExportPDF}
+                          className="w-full  bg-slate-800 hover:bg-slate-900 hover:cursor-pointer text-slate-50 px-5 py-2.5 font-semibold transition-all rounded"
+                        >
+                          Exporter PDF
+                        </button>
+                      </div>
+                    </div>
+                      {exportErrors.general && (
+                        <p className="text-rose-500 text-[11px] font-bold mt-2">{exportErrors.general}</p>
+                      )}
                   </div>
                   
                 </h2>
@@ -447,7 +459,7 @@ function App() {
               <div className="relative max-h-[90vh] overflow-y-auto border border-slate-200 ">
                 <table className="w-full text-left border-collapse print:mt-6 print:pt-6">
                   <thead className=''  >
-                    <tr className="  border-b border-slate-200  ">
+                    <tr className="  border-slate-200  ">
                       <th className=" sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider" style={{ cursor: 'pointer' }}>
                         Date
                       </th>
@@ -495,7 +507,7 @@ function App() {
                             {t.solde.toLocaleString()} Ar
                           </td>
                           {isAdmin && (
-                            <td className='px-2' > <button disabled={isDeleting} className={`text-center w-full uppercase py-2 text-xs text-gray-50 ${isDeleting ? 'bg-red-300 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600 hover:cursor-pointer'}`} key={t.id} onClick={() => openDeleteModal(t)} >supprimer</button> </td>
+                            <td className='px-2' > <button disabled={isDeleting} className={`text-center w-full uppercase py-2 text-xs text-gray-50 rounded ${isDeleting ? 'bg-red-300 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600 hover:cursor-pointer'}`} key={t.id} onClick={() => openDeleteModal(t)} >supprimer</button> </td>
                           )}
                         </tr>
                       ))
@@ -505,7 +517,7 @@ function App() {
                     <tfoot>
                       <tr className="bg-slate-900 text-white font-bold">
                         <td colSpan="2" className="px-6 py-5 text-sm bold">
-                          TOTAL GENERAL
+                          TOTAL
                         </td>
                         <td className="px-6 py-5 text-right text-emerald-400 bold">
                           {transactions.totalRecettes.toLocaleString()} Ar
@@ -520,9 +532,9 @@ function App() {
                   )}
                 </table>
               </div>
-              <footer id='pdf-footer' className="print-only mt-3 text-sm print:fixed print:bottom-8 print:w-full print:text-center print:bg-red-500">
+              {/* <footer id='pdf-footer' className="print-only mt-3 text-sm print:fixed print:bottom-8 print:w-full print:text-center print:bg-red-500">
                 <p className='text-center' >Résidence <strong className='uppercase' >la félicité</strong>, bis au Lot VB 72 ZX Ambatoroaka.</p>
-              </footer>
+              </footer> */}
             </div>
           </main>
         </div>
