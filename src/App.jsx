@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useTransactionManager } from './hooks/useTransactionManager';
 import exportPDF from './core/finance';
 import Login from './components/Login';
@@ -42,6 +42,7 @@ function App() {
   const [exportErrors, setExportErrors] = useState({});
   const [searchLibelle, setSearchLibelle] = useState('');
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [showToolbar, setShowToolbar] = useState(true);
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     transactionId: null,
@@ -184,74 +185,100 @@ function App() {
   if (!session) return <Login />;
 
   const isAdmin = adminEmails.includes((session.user.email || '').trim().toLowerCase());
+  const userEmail = session.user.email || '';
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900">
-      <div className="max-w-350 mx-auto">
-        <header className="grid grid-cols-1 md:grid-cols-4 mb-6 gap-6 md:gap-10 items-end no-print">
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">{app_title}</h1>
-            <p className="text-slate-500">Gestion de tresorerie en temps reel</p>
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+      <header className="sticky top-0 z-50 w-full bg-slate-900 text-slate-100  no-print">
+        <div className="max-w-350 mx-auto px-4 md:px-8 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h1 className="text-xl md:text-2xl font-extrabold tracking-tight">{app_title}</h1>
+              <p className="text-slate-300 text-sm">Gestion trésorerie en temps réel</p>
+            </div>
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="flex items-center gap-2 text-xs bg-slate-800 rounded border border-slate-700 px-3 py-2 max-w-44 md:max-w-xs">
+                <span className="text-green-400">Connecté :</span>
+                <span className="text-slate-100 truncate">{userEmail}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowToolbar((prev) => !prev)}
+                aria-expanded={showToolbar}
+                aria-label="Afficher ou masquer la barre d'outils"
+                className="p-2 text-slate-200 hover:bg-slate-800 hover:cursor-pointer transition-all"
+              >
+                <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                  <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"/>
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                className={`px-3 py-2 rounded text-sm font-semibold border transition-all ${
+                  isSigningOut
+                    ? 'bg-rose-300 text-white border-0 cursor-not-allowed'
+                    : 'bg-rose-500 text-white border-0 hover:bg-rose-600 hover:cursor-pointer'
+                }`}
+              >
+                {isSigningOut ? 'Déconnexion...' : 'Déconnexion'}
+              </button>
+              
+            </div>
           </div>
-
-          <div className="col-span-1 md:col-span-3 max-w-full grid grid-cols-1 md:grid-cols-7 gap-3">
-            <div className="md:col-span-3">
-              <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Filtrer par libelle</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Rechercher..."
-                  value={searchLibelle}
-                  className="w-full px-3 py-2 pr-8 bg-white border border-slate-200 outline-none"
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                />
-                {searchLibelle && (
-                  <button
-                    type="button"
-                    onClick={clearSearch}
-                    className="absolute inset-y-0 right-2 text-slate-500 hover:text-slate-800 hover:cursor-pointer"
-                    aria-label="Effacer la recherche"
-                  >
-                    <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M2 12.3906C2 6.86778 6.47715 2.39062 12 2.39062C17.5228 2.39062 22 6.86778 22 12.3906C22 17.9135 17.5228 22.3906 12 22.3906C6.47715 22.3906 2 17.9135 2 12.3906ZM8.78362 10.2354L10.9388 12.3906L8.78362 14.5458C8.49073 14.8387 8.49073 15.3136 8.78362 15.6065C9.07652 15.8994 9.55139 15.8994 9.84428 15.6065L11.9995 13.4513L14.1546 15.6064C14.4475 15.8993 14.9224 15.8993 15.2153 15.6064C15.5082 15.3135 15.5082 14.8387 15.2153 14.5458L13.0602 12.3906L15.2153 10.2355C15.5082 9.94258 15.5082 9.46771 15.2153 9.17482C14.9224 8.88192 14.4475 8.88192 14.1546 9.17482L11.9995 11.33L9.84428 9.17475C9.55139 8.88186 9.07652 8.88186 8.78362 9.17475C8.49073 9.46764 8.49073 9.94251 8.78362 10.2354Z" fill="#323544"/>
-                    </svg>
-                  </button>
-                )}
+        </div>
+        <div className={`overflow-hidden transition-all duration-300 bg-slate-200 ${showToolbar ? 'max-h-56 opacity-100 border-t border-slate-700' : 'max-h-0 opacity-0'}`}>
+          <div className="max-w-350 mx-auto  md:px-8 p-4">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-12 md:items-end">
+              <div className="md:col-span-6">
+                <label className="block text-xs font-bold uppercase text-slate-900 mb-2">Filtrer par libelle</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Rechercher..."
+                    value={searchLibelle}
+                    className="w-full px-3 py-2 pr-8 bg-slate-50 border border-slate-50 rounded text-slate-900 placeholder:text-slate-400 outline-none"
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                  />
+                  {searchLibelle && (
+                    <button
+                      type="button"
+                      onClick={clearSearch}
+                      className="absolute inset-y-0 right-2 text-slate-400 hover:text-slate-500 hover:cursor-pointer"
+                      aria-label="Effacer la recherche"
+                    >
+                      <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 12.3906C2 6.86778 6.47715 2.39062 12 2.39062C17.5228 2.39062 22 6.86778 22 12.3906C22 17.9135 17.5228 22.3906 12 22.3906C6.47715 22.3906 2 17.9135 2 12.3906ZM8.78362 10.2354L10.9388 12.3906L8.78362 14.5458C8.49073 14.8387 8.49073 15.3136 8.78362 15.6065C9.07652 15.8994 9.55139 15.8994 9.84428 15.6065L11.9995 13.4513L14.1546 15.6064C14.4475 15.8993 14.9224 15.8993 15.2153 15.6064C15.5082 15.3135 15.5082 14.8387 15.2153 14.5458L13.0602 12.3906L15.2153 10.2355C15.5082 9.94258 15.5082 9.46771 15.2153 9.17482C14.9224 8.88192 14.4475 8.88192 14.1546 9.17482L11.9995 11.33L9.84428 9.17475C9.55139 8.88186 9.07652 8.88186 8.78362 9.17475C8.49073 9.46764 8.49073 9.94251 8.78362 10.2354Z" fill="#94A3B8"/>
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="md:col-span-3">
+                <label className="block text-xs font-bold uppercase text-slate-900 mb-2">Type date</label>
+                <select
+                  value={dateFilter.mode}
+                  onChange={(e) => handleDateModeChange(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-50 rounded text-slate-900 outline-none"
+                >
+                  <option value="all">Toutes</option>
+                  <option value="range">Entre 2 dates</option>
+                </select>
+              </div>
+              <div className="md:col-span-3">
+                <button
+                  onClick={handleExportPDF}
+                  className="w-full bg-slate-800 hover:bg-slate-900 hover:cursor-pointer text-slate-50 px-5 py-2.5 font-semibold transition-all rounded"
+                >
+                  Exporter PDF
+                </button>
               </div>
             </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Type date</label>
-              <select
-                value={dateFilter.mode}
-                onChange={(e) => handleDateModeChange(e.target.value)}
-                className="w-full px-3 py-2 bg-white border border-slate-200 outline-none"
-              >
-                <option value="all">Toutes</option>
-                <option value="range">Entre 2 dates</option>
-              </select>
-            </div>
-
-            <button
-              onClick={handleExportPDF}
-              className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 font-medium transition-all shadow-lg active:scale-95 md:col-span-1"
-            >
-              Exporter PDF
-            </button>
-            <button
-              type="button"
-              onClick={handleSignOut}
-              disabled={isSigningOut}
-              className={`px-4 py-3 font-medium transition-all md:col-span-1 ${
-                isSigningOut
-                  ? 'bg-slate-300 text-slate-600 cursor-not-allowed'
-                  : 'bg-slate-200 text-slate-800 hover:bg-slate-300 hover:cursor-pointer'
-              }`}
-            >
-              {isSigningOut ? 'Déconnexion...' : 'Déconnexion'}
-            </button>
           </div>
-        </header>
+        </div>
+      </header>
+      <div className="max-w-350 mx-auto p-4 md:p-8">
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <aside className="lg:col-span-1 no-print">
@@ -341,7 +368,7 @@ function App() {
                       Ajout en cours...
                     </>
                   ) : (
-                    <span className='uppercase' >Ajouter à la liste</span>
+                    <span className='uppercase' >Ajouter à  la liste</span>
                   )}
                 </button>
               </form>
@@ -554,4 +581,5 @@ function App() {
 }
 
 export default App;
+
 
