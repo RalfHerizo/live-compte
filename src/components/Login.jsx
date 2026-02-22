@@ -2,6 +2,11 @@ import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 
 export default function Login() {
+  const defaultLoginLogoUrl =
+    "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg";
+  const [logoSrc, setLogoSrc] = useState(
+    import.meta.env.VITE_LOGIN_LOGO_URL || defaultLoginLogoUrl
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -26,8 +31,9 @@ export default function Login() {
           <div className="p-6 mx-auto bg-white rounded-lg shadow sm:max-w-xl sm:p-8">
             <div className="inline-flex items-center mb-4 text-xl font-semibold text-gray-900">
               <img
-                className="w-8 h-8 mr-2"
-                src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
+                className="w-12 h-10 mr-2 rounded-lg"
+                src={logoSrc}
+                onError={() => setLogoSrc(defaultLoginLogoUrl)}
                 alt="logo"
               />
               Raoelison Compte
