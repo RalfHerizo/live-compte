@@ -41,7 +41,7 @@ function App() {
   const [exportErrors, setExportErrors] = useState({});
   const [searchLibelle, setSearchLibelle] = useState("");
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const [showToolbar, setShowToolbar] = useState(true);
+  const [showToolbar, setShowToolbar] = useState(false);
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     transactionId: null,
