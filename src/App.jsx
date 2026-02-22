@@ -441,7 +441,7 @@ function App() {
                       value={formData.recette}
                       onChange={(e) => handleRecetteChange(e.target.value)}
                       disabled={!!formData.depense}
-                      className="w-full px-3 py-2 bg-slate-50 outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="rounded w-full px-3 py-2 bg-slate-50 outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
                   <div>
@@ -455,7 +455,7 @@ function App() {
                       value={formData.depense}
                       onChange={(e) => handleDepenseChange(e.target.value)}
                       disabled={!!formData.recette}
-                      className="w-full px-3 py-2 bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500"
+                      className="rounded w-full px-3 py-2 bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500"
                     />
                   </div>
                   <div className="col-span-2">
