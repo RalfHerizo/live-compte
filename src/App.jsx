@@ -746,6 +746,20 @@ function App() {
           </div>
         </div>
       )}
+      
+
+      <footer class="bg-neutral-primary-soft rounded-base shadow-xs border border-default fixed bottom-0 w-full bg-slate-900">
+          <div class="w-full mx-auto max-w-7xl p-4 md:flex md:items-center md:justify-between">
+            <span class="text-slate-50 text-sm text-body sm:text-center">© {new Date().getFullYear()} <a href="https://flowbite.com/" class="hover:underline">Raoelison-Compte</a>. Tous droits réservés.
+          </span>
+          <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-body sm:mt-0">
+            <li>
+                <a target="blank" href="https://www.linkedin.com/in/ralf-lionel-066b20227/" class="text-slate-50 hover:underline">Contactez-le développeur</a>
+            </li>
+          </ul>
+          </div>
+      </footer>
+
     </div>
   );
 }
