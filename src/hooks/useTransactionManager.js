@@ -1,22 +1,20 @@
-import { useState, useMemo, useEffect } from "react";
-import { supabase } from '../lib/supabaseClient';
+import { useEffect, useMemo, useState } from "react";
+import { supabase } from "../lib/supabaseClient";
 import { computeBalances, filterTransactionsByDate } from "../core/finance";
 
 export const useTransactionManager = (initialData = [], session = null) => {
   const [transactions, setTransactions] = useState(initialData);
   const [filterLibelle, setFilterLibelle] = useState("");
-  const [loading, setLoading] = useState(true); // Pour gérer l'état de chargement
+  const [loading, setLoading] = useState(true);
   const [dateFilter, setDateFilter] = useState({
     mode: "all",
     month: "",
     from: "",
     to: "",
   });
-
   const [isAdding, setIsAdding] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // 1. Charger les données au démarrage
   useEffect(() => {
     if (!session) {
       setTransactions([]);
@@ -28,9 +26,9 @@ export const useTransactionManager = (initialData = [], session = null) => {
       try {
         setLoading(true);
         const { data, error } = await supabase
-          .from('transactions')
-          .select('*')
-          .order('date', { ascending: true });
+          .from("transactions")
+          .select("*")
+          .order("date", { ascending: true });
 
         if (error) throw error;
         setTransactions(data || []);
@@ -44,7 +42,6 @@ export const useTransactionManager = (initialData = [], session = null) => {
     fetchTransactions();
   }, [session]);
 
-  // 2. Logique de filtrage et calcul (inchangée, mais réactive aux données de la DB)
   const processedData = useMemo(() => {
     const filteredByLibelle = transactions.filter((transaction) =>
       transaction.libelle.toLowerCase().includes(filterLibelle.toLowerCase())
@@ -55,19 +52,17 @@ export const useTransactionManager = (initialData = [], session = null) => {
     return computeBalances(filteredByDate);
   }, [transactions, filterLibelle, dateFilter]);
 
-  // 3. Ajouter une transaction sur Supabase
   const addTransaction = async (newTransaction) => {
     if (!newTransaction.libelle.trim()) return;
 
     const recette = Number(newTransaction.recette) || 0;
     const depense = Number(newTransaction.depense) || 0;
-    
+
     if (recette === 0 && depense === 0) {
       alert("Veuillez saisir un montant (Recette ou Dépense).");
       return;
     }
 
-    // Préparation de l'objet pour la DB (Supabase génère l'ID uuid automatiquement)
     const transactionToSave = {
       libelle: newTransaction.libelle.trim().toUpperCase(),
       recette,
@@ -78,13 +73,12 @@ export const useTransactionManager = (initialData = [], session = null) => {
     try {
       setIsAdding(true);
       const { data, error } = await supabase
-        .from('transactions')
+        .from("transactions")
         .insert([transactionToSave])
         .select();
 
       if (error) throw error;
-      
-      // Mise à jour de l'état local avec l'objet retourné par la DB (qui contient l'ID)
+
       setTransactions((prev) => [...prev, data[0]]);
     } catch (error) {
       alert("Erreur lors de l'enregistrement : " + error.message);
@@ -93,19 +87,22 @@ export const useTransactionManager = (initialData = [], session = null) => {
     }
   };
 
-  // 4. Supprimer une transaction sur Supabase
-  const deleteTransaction = async (id) => {
+  const deleteTransactions = async (ids = []) => {
+    const idsToDelete = [...new Set(ids)].filter(Boolean);
+    if (idsToDelete.length === 0) return;
+
     try {
       setIsDeleting(true);
       const { error } = await supabase
-        .from('transactions')
+        .from("transactions")
         .delete()
-        .eq('id', id);
+        .in("id", idsToDelete);
 
       if (error) throw error;
 
-      // Mise à jour de l'état local
-      setTransactions(prev => prev.filter(t => t.id !== id));
+      setTransactions((prev) =>
+        prev.filter((transaction) => !idsToDelete.includes(transaction.id))
+      );
     } catch (error) {
       alert("Erreur lors de la suppression : " + error.message);
     } finally {
@@ -113,16 +110,21 @@ export const useTransactionManager = (initialData = [], session = null) => {
     }
   };
 
+  const deleteTransaction = async (id) => {
+    await deleteTransactions([id]);
+  };
+
   return {
     transactions: processedData,
-    filterLibelle, // Ajouté pour ton bouton "X" de nettoyage
+    filterLibelle,
     setFilterLibelle,
     dateFilter,
     setDateFilter,
     addTransaction,
     deleteTransaction,
-    loading, // Tu peux l'utiliser pour afficher un message "Chargement..." dans ton tableau
+    deleteTransactions,
+    loading,
     isAdding,
-    isDeleting
+    isDeleting,
   };
 };

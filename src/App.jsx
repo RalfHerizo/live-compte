@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTransactionManager } from "./hooks/useTransactionManager";
 import { usePagination } from "./hooks/usePagination";
 import exportPDF from "./core/finance";
@@ -20,6 +20,7 @@ function App() {
     dateFilter,
     setDateFilter,
     deleteTransaction,
+    deleteTransactions,
     loading,
     isAdding,
     isDeleting,
@@ -43,11 +44,14 @@ function App() {
   const [searchLibelle, setSearchLibelle] = useState("");
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showToolbar, setShowToolbar] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
-    transactionId: null,
+    mode: "single",
+    transactionIds: [],
     transactionLabel: "",
   });
+  const selectAllRef = useRef(null);
 
   const {
     currentPage,
@@ -62,6 +66,19 @@ function App() {
     showPaginationControls,
     resetPagination,
   } = usePagination(transactions.items, { initialRowsPerPage: 20 });
+
+  const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
+  const visibleIds = useMemo(() => currentData.map((item) => item.id), [currentData]);
+  const allVisibleSelected =
+    visibleIds.length > 0 && visibleIds.every((id) => selectedSet.has(id));
+  const someVisibleSelected = visibleIds.some((id) => selectedSet.has(id));
+  const selectedCount = selectedIds.length;
+
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate = someVisibleSelected && !allVisibleSelected;
+    }
+  }, [someVisibleSelected, allVisibleSelected]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -112,11 +129,13 @@ function App() {
   const handleDateModeChange = (mode) => {
     setDateFilter((prev) => ({ ...prev, mode }));
     resetPagination();
+    setSelectedIds([]);
   };
 
   const handleDateFilterChange = (field, value) => {
     setDateFilter((prev) => ({ ...prev, [field]: value }));
     resetPagination();
+    setSelectedIds([]);
   };
 
   const handleRecetteChange = (value) => {
@@ -166,12 +185,45 @@ function App() {
     setSearchLibelle(value);
     setFilterLibelle(value);
     resetPagination();
+    setSelectedIds([]);
   };
 
   const clearSearch = () => {
     setSearchLibelle("");
     setFilterLibelle("");
     resetPagination();
+    setSelectedIds([]);
+  };
+
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((selectedId) => selectedId !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (visibleIds.length === 0) return;
+
+    setSelectedIds((prev) => {
+      const prevSet = new Set(prev);
+
+      if (visibleIds.every((id) => prevSet.has(id))) {
+        return prev.filter((id) => !visibleIds.includes(id));
+      }
+
+      visibleIds.forEach((id) => prevSet.add(id));
+      return Array.from(prevSet);
+    });
+  };
+
+  const openBulkDeleteModal = () => {
+    if (selectedCount === 0) return;
+    setDeleteModal({
+      isOpen: true,
+      mode: "bulk",
+      transactionIds: selectedIds,
+      transactionLabel: "",
+    });
   };
 
   const handleSignOut = async () => {
@@ -186,7 +238,8 @@ function App() {
   const openDeleteModal = (transaction) => {
     setDeleteModal({
       isOpen: true,
-      transactionId: transaction.id,
+      mode: "single",
+      transactionIds: [transaction.id],
       transactionLabel: transaction.libelle,
     });
   };
@@ -195,17 +248,28 @@ function App() {
     if (isDeleting) return;
     setDeleteModal({
       isOpen: false,
-      transactionId: null,
+      mode: "single",
+      transactionIds: [],
       transactionLabel: "",
     });
   };
 
   const confirmDelete = async () => {
-    if (!deleteModal.transactionId) return;
-    await deleteTransaction(deleteModal.transactionId);
+    if (deleteModal.transactionIds.length === 0) return;
+
+    if (deleteModal.mode === "bulk") {
+      await deleteTransactions(deleteModal.transactionIds);
+    } else {
+      await deleteTransaction(deleteModal.transactionIds[0]);
+    }
+
+    setSelectedIds((prev) =>
+      prev.filter((id) => !deleteModal.transactionIds.includes(id))
+    );
     setDeleteModal({
       isOpen: false,
-      transactionId: null,
+      mode: "single",
+      transactionIds: [],
       transactionLabel: "",
     });
   };
@@ -588,8 +652,34 @@ function App() {
                     <option value={10}>10</option>
                     <option value={20}>20</option>
                     <option value={30}>30</option>
-                    <option value={50}>50</option>
+                      <option value={50}>50</option>
                   </select>
+                  {isAdmin && (
+                    <div
+                      className={`transition-all duration-300 ${
+                        selectedCount > 0
+                          ? "opacity-100 translate-y-0"
+                          : "opacity-0 -translate-y-1 pointer-events-none"
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        onClick={openBulkDeleteModal}
+                        className="inline-flex items-center gap-2 px-3 py-2 text-sm font-semibold text-white bg-red-600 rounded hover:bg-red-700 hover:cursor-pointer"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="w-4 h-4"
+                          aria-hidden="true"
+                        >
+                          <path d="M9 3.75A2.25 2.25 0 0 1 11.25 1.5h1.5A2.25 2.25 0 0 1 15 3.75V4.5h3a.75.75 0 0 1 0 1.5h-.386l-.682 12.273A2.25 2.25 0 0 1 14.686 20.5H9.314a2.25 2.25 0 0 1-2.246-2.227L6.386 6H6a.75.75 0 0 1 0-1.5h3v-.75Zm1.5.75h3v-.75a.75.75 0 0 0-.75-.75h-1.5a.75.75 0 0 0-.75.75v.75Z" />
+                        </svg>
+                        Supprimer ({selectedCount})
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <span className="text-slate-900" >
                   Affichage de <strong>{displayStart}</strong> à <strong>{displayEnd}</strong> sur{" "}
@@ -601,6 +691,19 @@ function App() {
                 <table className="w-full text-left border-collapse print:mt-6 print:pt-6">
                   <thead className="">
                     <tr className="  border-slate-200  ">
+                      {isAdmin && (
+                        <th className="sticky top-0 bg-slate-900 px-4 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider w-12">
+                          <input
+                            ref={selectAllRef}
+                            type="checkbox"
+                            checked={allVisibleSelected}
+                            onChange={toggleSelectAll}
+                            disabled={isDeleting || visibleIds.length === 0}
+                            className="h-4 w-4 accent-slate-700 cursor-pointer"
+                            aria-label="Sélectionner toutes les lignes visibles"
+                          />
+                        </th>
+                      )}
                       <th
                         className=" sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider"
                         style={{ cursor: "pointer" }}
@@ -630,7 +733,7 @@ function App() {
                     {loading ? (
                       <tr>
                         <td
-                          colSpan={isAdmin ? 6 : 5}
+                          colSpan={isAdmin ? 7 : 5}
                           className="px-6 py-10 text-center text-sm text-slate-500"
                         >
                           <div className="flex items-center justify-center gap-2">
@@ -642,7 +745,7 @@ function App() {
                     ) : totalItems === 0 ? (
                       <tr>
                         <td
-                          colSpan={isAdmin ? 6 : 5}
+                          colSpan={isAdmin ? 7 : 5}
                           className="px-6 py-10 text-center text-sm text-slate-500"
                         >
                           {hasActiveFilters
@@ -654,9 +757,25 @@ function App() {
                       currentData.map((t) => (
                         <tr
                           key={t.id}
-                          className="odd:bg-slate-100 hover:bg-slate-300 transition-colors"
+                          className={`transition-colors ${
+                            selectedSet.has(t.id)
+                              ? "bg-blue-100 odd:bg-blue-200 hover:bg-blue-100"
+                              : "odd:bg-slate-100 hover:bg-slate-300"
+                          }`}
                         >
-                          <td className="px-6 py-4 text-slate-600 whitespace-nowrap text-sm">
+                          {isAdmin && (
+                            <td className="px-4 py-4">
+                              <input
+                                type="checkbox"
+                                checked={selectedSet.has(t.id)}
+                                onChange={() => toggleSelect(t.id)}
+                                disabled={isDeleting}
+                                className="h-4 w-4 accent-slate-700 cursor-pointer"
+                                aria-label={`Sélectionner ${t.libelle}`}
+                              />
+                            </td>
+                          )}
+                          <td className="px-6 py-4 text-slate-600 whitespace-nowrap text-sm ">
                             {new Date(t.date).toLocaleDateString("fr-FR")}
                           </td>
                           <td className="px-6 py-4 font-medium text-slate-900 text-xs italic">
@@ -700,7 +819,7 @@ function App() {
                     <tfoot>
                       <tr className="bg-slate-900 text-white font-bold">
                         <td
-                          colSpan="2"
+                          colSpan={isAdmin ? 3 : 2}
                           className="rounded-bl px-6 py-5 text-sm bold"
                         >
                           TOTAL
@@ -745,6 +864,16 @@ function App() {
                         <option value={30}>30</option>
                         <option value={50}>50</option>
                       </select>
+                      {isAdmin && (
+                        <div
+                          className={`transition-all duration-300 ${
+                            selectedCount > 0
+                              ? "opacity-100 translate-y-0"
+                              : "opacity-0 -translate-y-1 pointer-events-none"
+                          }`}
+                        >
+                        </div>
+                      )}
                     </div>
                     {showPaginationControls && (
                       <>
@@ -872,16 +1001,28 @@ function App() {
                 </button>
               </div>
               <p className=" p-4 md:p-5 space-y-4 mt-2 text-sm text-slate-600">
-                Voulez-vous vraiment supprimer l&apos;opération
-                {deleteModal.transactionLabel ? (
-                  <span className="font-semibold text-slate-900">
-                    {" "}
-                    {'"' + deleteModal.transactionLabel + '"'}
-                  </span>
+                {deleteModal.mode === "bulk" ? (
+                  <>
+                    Voulez-vous vraiment supprimer ces{" "}
+                    <span className="font-semibold text-slate-900">
+                      {deleteModal.transactionIds.length}
+                    </span>{" "}
+                    éléments ?
+                  </>
                 ) : (
-                  ""
-                )}{" "}
-                ?
+                  <>
+                    Voulez-vous vraiment supprimer l&apos;opération
+                    {deleteModal.transactionLabel ? (
+                      <span className="font-semibold text-slate-900">
+                        {" "}
+                        {'"' + deleteModal.transactionLabel + '"'}
+                      </span>
+                    ) : (
+                      ""
+                    )}{" "}
+                    ?
+                  </>
+                )}
               </p>
             </div>
             <div className="flex justify-end gap-3 bg-slate-50 px-5 py-4">
@@ -907,7 +1048,9 @@ function App() {
                     : "bg-rose-600 hover:bg-rose-700 hover:cursor-pointer"
                 }`}
               >
-                Supprimer
+                {deleteModal.mode === "bulk"
+                  ? `Supprimer (${deleteModal.transactionIds.length})`
+                  : "Supprimer"}
               </button>
             </div>
           </div>
@@ -949,3 +1092,5 @@ function App() {
 }
 
 export default App;
+
+
