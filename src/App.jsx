@@ -364,10 +364,14 @@ function App() {
                 onClick={() => setShowToolbar((prev) => !prev)}
                 aria-expanded={showToolbar}
                 aria-label="Afficher ou masquer la barre d'outils"
-                className="p-2 text-slate-200 hover:bg-slate-800 hover:cursor-pointer transition-all"
+                className={`p-2 border transition-all hover:cursor-pointer rounded ${
+                  showToolbar
+                    ? "text-slate-50 bg-slate-700 border-slate-600"
+                    : "text-slate-200 border-transparent hover:bg-slate-800"
+                }`}
               >
                 <svg
-                  className="w-4 h-4"
+                  className={`w-4 h-4 transition-transform`}
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
