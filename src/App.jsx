@@ -789,17 +789,35 @@ function App() {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {loading ? (
-                      <tr>
-                        <td
-                          colSpan={isAdmin ? 7 : 5}
-                          className="px-6 py-10 text-center text-sm text-slate-500"
-                        >
-                          <div className="flex items-center justify-center gap-2">
-                            <span className="animate-spin inline-block w-4 h-4 border-2 border-slate-500 border-t-transparent rounded-full"></span>
-                            Chargement des données depuis le cloud...
-                          </div>
-                        </td>
-                      </tr>
+                      Array.from({ length: 8 }).map((_, index) => (
+                        <tr key={`skeleton-${index}`} className="animate-pulse odd:bg-slate-100">
+                          {isAdmin && (
+                            <td className="px-4 py-4">
+                              <div className="h-4 w-4 rounded bg-slate-300"></div>
+                            </td>
+                          )}
+                          <td className="px-6 py-4">
+                            <div className="h-4 w-24 rounded bg-slate-300"></div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="h-4 w-40 rounded bg-slate-300"></div>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="ml-auto h-4 w-20 rounded bg-slate-300"></div>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="ml-auto h-4 w-20 rounded bg-slate-300"></div>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="ml-auto h-4 w-24 rounded bg-slate-300"></div>
+                          </td>
+                          {isAdmin && (
+                            <td className="px-2 py-4">
+                              <div className="ml-auto h-8 w-24 rounded bg-slate-300"></div>
+                            </td>
+                          )}
+                        </tr>
+                      ))
                     ) : totalItems === 0 ? (
                       <tr>
                         <td
