@@ -482,8 +482,9 @@ function App() {
       </header>
       <div className="max-w-350 mx-auto p-4 md:p-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <aside className="lg:col-span-1 no-print">
-            <div className="bg-slate-200 rounded-lg  sticky top-8">
+          {isAdmin && (
+            <aside className="lg:col-span-1 no-print">
+              <div className="bg-slate-200 rounded-lg  sticky top-8">
               <div class="flex items-center justify-between py-3 rounded-t border-b mx-3  border-slate-300">
                 <div class="flex items-center gap-3">
                   <div class="bg-slate-900 flex items-center justify-center p-3 rounded-xl">
@@ -609,76 +610,79 @@ function App() {
                   )}
                 </button>
               </form>
-            </div>
-          </aside>
-
-          <main className="lg:col-span-3 overflow-x-auto">
-            <div className="table-parent-container bg-slate-200 rounded overflow-hidden shadow-sm ">
-              <div className="print-only bg-slate-900 py-3">
-                <h2 className="text-center">
-                  {/* Résidence <strong className='uppercase'>la félicité</strong> Ambatoroaka
-                  <br /> */}
-                  <div className="  mx-5 ">
-                    <div className="grid grid-cols-4 items-center ">
-                      <div className="col-span-3 flex items-center justify-start text-slate-50 ">
-                        Facture du
-                        <input
-                          type="text"
-                          placeholder="Libellé"
-                          value={printDetails.libelle}
-                          onChange={(e) => {
-                            setPrintDetails({
-                              ...printDetails,
-                              libelle: e.target.value,
-                            });
-                            if (exportErrors.general) setExportErrors({});
-                          }}
-                          className="text-slate-900 mx-2 inline-block border-gray-400 bg-slate-100 outline-none text-center w-40 p-1 rounded"
-                        />
-                        de
-                        <input
-                          type="date"
-                          value={printDetails.dateFrom}
-                          onChange={(e) => {
-                            setPrintDetails({
-                              ...printDetails,
-                              dateFrom: e.target.value,
-                            });
-                            if (exportErrors.general) setExportErrors({});
-                          }}
-                          className=" text-slate-900 mx-2 inline-block bg-slate-100 border-gray-400 outline-none text-center w-40 p-1 rounded"
-                        />
-                        au
-                        <input
-                          type="date"
-                          value={printDetails.dateTo}
-                          onChange={(e) => {
-                            setPrintDetails({
-                              ...printDetails,
-                              dateTo: e.target.value,
-                            });
-                            if (exportErrors.general) setExportErrors({});
-                          }}
-                          className=" text-slate-900 mx-2 inline-block bg-slate-100 border-gray-400 outline-none text-center w-40 p-1 rounded"
-                        />
-                      </div>
-                      <div className="0">
-                        <button
-                          onClick={handleExportPDF}
-                          className="w-full  bg-blue-500 hover:bg-blue-600 hover:cursor-pointer text-slate-50 px-5 py-2.5 font-semibold transition-all rounded"
-                        >
-                          Exporter PDF
-                        </button>
-                      </div>
-                    </div>
-                    {exportErrors.general && (
-                      <p className="text-rose-500 text-left text-[11px] font-bold mt-2">
-                        {exportErrors.general}
-                      </p>
-                    )}
-                  </div>
-                </h2>
               </div>
+            </aside>
+          )}
+
+          <main className={`${isAdmin ? "lg:col-span-3" : "lg:col-span-4"} overflow-x-auto`}>
+            <div className="table-parent-container bg-slate-200 rounded overflow-hidden shadow-sm ">
+              {isAdmin && (
+                <div className="print-only bg-slate-900 py-3">
+                  <h2 className="text-center">
+                    {/* Résidence <strong className='uppercase'>la félicité</strong> Ambatoroaka
+                    <br /> */}
+                    <div className="  mx-5 ">
+                      <div className="grid grid-cols-4 items-center ">
+                        <div className="col-span-3 flex items-center justify-start text-slate-50 ">
+                          Facture du
+                          <input
+                            type="text"
+                            placeholder="Libellé"
+                            value={printDetails.libelle}
+                            onChange={(e) => {
+                              setPrintDetails({
+                                ...printDetails,
+                                libelle: e.target.value,
+                              });
+                              if (exportErrors.general) setExportErrors({});
+                            }}
+                            className="text-slate-900 mx-2 inline-block border-gray-400 bg-slate-100 outline-none text-center w-40 p-1 rounded"
+                          />
+                          de
+                          <input
+                            type="date"
+                            value={printDetails.dateFrom}
+                            onChange={(e) => {
+                              setPrintDetails({
+                                ...printDetails,
+                                dateFrom: e.target.value,
+                              });
+                              if (exportErrors.general) setExportErrors({});
+                            }}
+                            className=" text-slate-900 mx-2 inline-block bg-slate-100 border-gray-400 outline-none text-center w-40 p-1 rounded"
+                          />
+                          au
+                          <input
+                            type="date"
+                            value={printDetails.dateTo}
+                            onChange={(e) => {
+                              setPrintDetails({
+                                ...printDetails,
+                                dateTo: e.target.value,
+                              });
+                              if (exportErrors.general) setExportErrors({});
+                            }}
+                            className=" text-slate-900 mx-2 inline-block bg-slate-100 border-gray-400 outline-none text-center w-40 p-1 rounded"
+                          />
+                        </div>
+                        <div className="0">
+                          <button
+                            onClick={handleExportPDF}
+                            className="w-full  bg-blue-500 hover:bg-blue-600 hover:cursor-pointer text-slate-50 px-5 py-2.5 font-semibold transition-all rounded"
+                          >
+                            Exporter PDF
+                          </button>
+                        </div>
+                      </div>
+                      {exportErrors.general && (
+                        <p className="text-rose-500 text-left text-[11px] font-bold mt-2">
+                          {exportErrors.general}
+                        </p>
+                      )}
+                    </div>
+                  </h2>
+                </div>
+              )}
 
               <div className="px-4 md:px-6 py-3 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-500 no-print">
                 <div className="flex items-center gap-2">
@@ -727,7 +731,7 @@ function App() {
                 </span>
               </div>
 
-              <div className="sticky top-20 md:top-24 z-10 max-h-[90vh] overflow-y-auto border border-slate-200 ">
+              <div className="md:top-24 z-10 max-h-[90vh] overflow-y-auto border border-slate-200 ">
                 <table className="w-full text-left border-collapse print:mt-6 print:pt-6">
                   <thead className="">
                     <tr className="  border-slate-200  ">
