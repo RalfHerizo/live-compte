@@ -346,13 +346,20 @@ function App() {
       <header className="w-full bg-slate-900 text-slate-100  no-print">
         <div className="max-w-350 mx-auto px-4 md:px-8 py-4">
           <div className="flex items-center justify-between gap-4">
-            <div>
-              <h1 className="text-xl md:text-2xl font-extrabold tracking-tight">
-                {app_title}
-              </h1>
-              <p className="text-slate-300 text-sm">
-                Gestion trésorerie en temps réel
-              </p>
+            <div className="flex items-center gap-3">
+              <img
+                src="/raoelison-logo-light.png"
+                alt="Logo Raoelison"
+                className="w-10 h-10 rounded-lg object-cover"
+              />
+              <div>
+                <h1 className="text-xl md:text-2xl font-extrabold tracking-tight">
+                  {app_title}
+                </h1>
+                <p className="text-slate-300 text-sm">
+                  Gestion trésorerie en temps réel
+                </p>
+              </div>
             </div>
             <div className="flex items-center gap-2 md:gap-3">
               <div className="flex items-center gap-2 text-xs bg-slate-800 rounded border border-slate-700 px-3 py-2 max-w-44 md:max-w-xs">
