@@ -1,5 +1,6 @@
 ﻿import React, { useEffect, useState } from "react";
 import { useTransactionManager } from "./hooks/useTransactionManager";
+import { usePagination } from "./hooks/usePagination";
 import exportPDF from "./core/finance";
 import Login from "./components/Login";
 import { supabase } from "./lib/supabaseClient";
@@ -47,6 +48,20 @@ function App() {
     transactionId: null,
     transactionLabel: "",
   });
+
+  const {
+    currentPage,
+    setCurrentPage,
+    rowsPerPage,
+    handleRowsPerPageChange,
+    totalItems,
+    totalPages,
+    currentData,
+    displayStart,
+    displayEnd,
+    showPaginationControls,
+    resetPagination,
+  } = usePagination(transactions.items, { initialRowsPerPage: 20 });
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -96,10 +111,12 @@ function App() {
 
   const handleDateModeChange = (mode) => {
     setDateFilter((prev) => ({ ...prev, mode }));
+    resetPagination();
   };
 
   const handleDateFilterChange = (field, value) => {
     setDateFilter((prev) => ({ ...prev, [field]: value }));
+    resetPagination();
   };
 
   const handleRecetteChange = (value) => {
@@ -148,11 +165,13 @@ function App() {
   const handleSearchChange = (value) => {
     setSearchLibelle(value);
     setFilterLibelle(value);
+    resetPagination();
   };
 
   const clearSearch = () => {
     setSearchLibelle("");
     setFilterLibelle("");
+    resetPagination();
   };
 
   const handleSignOut = async () => {
@@ -206,7 +225,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-      <header className="sticky top-0 z-50 w-full bg-slate-900 text-slate-100  no-print">
+      <header className="w-full bg-slate-900 text-slate-100  no-print">
         <div className="max-w-350 mx-auto px-4 md:px-8 py-4">
           <div className="flex items-center justify-between gap-4">
             <div>
@@ -263,7 +282,7 @@ function App() {
         >
           <div className="max-w-350 mx-auto  md:px-8 p-4">
             <div>
-              <div className="grid grid-cols-2 gap-3 md:items-end">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:items-end">
                 <div className="">
                   <label className="block text-xs font-bold uppercase text-slate-900 mb-2">
                     Filtrer par libelle
@@ -491,13 +510,13 @@ function App() {
 
           <main className="lg:col-span-3 overflow-x-auto">
             <div className="table-parent-container bg-slate-200 rounded overflow-hidden shadow-sm ">
-              <div className="print-only">
-                <h2 className="text-center mb-4">
+              <div className="print-only bg-slate-900 py-3">
+                <h2 className="text-center">
                   {/* Résidence <strong className='uppercase'>la félicité</strong> Ambatoroaka
                   <br /> */}
-                  <div className="my-3  mx-5">
+                  <div className="  mx-5 ">
                     <div className="grid grid-cols-4 items-center ">
-                      <div className="col-span-3 flex items-center justify-start ">
+                      <div className="col-span-3 flex items-center justify-start text-slate-50 ">
                         Facture du
                         <input
                           type="text"
@@ -510,7 +529,7 @@ function App() {
                             });
                             if (exportErrors.general) setExportErrors({});
                           }}
-                          className="mx-2 inline-block border-gray-400 bg-slate-50 outline-none text-center w-40 p-1"
+                          className="text-slate-900 mx-2 inline-block border-gray-400 bg-slate-100 outline-none text-center w-40 p-1 rounded"
                         />
                         de
                         <input
@@ -523,7 +542,7 @@ function App() {
                             });
                             if (exportErrors.general) setExportErrors({});
                           }}
-                          className="mx-2 inline-block bg-slate-50 border-gray-400 outline-none text-center w-40 p-1"
+                          className=" text-slate-900 mx-2 inline-block bg-slate-100 border-gray-400 outline-none text-center w-40 p-1 rounded"
                         />
                         au
                         <input
@@ -536,20 +555,20 @@ function App() {
                             });
                             if (exportErrors.general) setExportErrors({});
                           }}
-                          className=" mx-2 inline-block bg-slate-50 border-gray-400 outline-none text-center w-40 p-1"
+                          className=" text-slate-900 mx-2 inline-block bg-slate-100 border-gray-400 outline-none text-center w-40 p-1 rounded"
                         />
                       </div>
                       <div className="0">
                         <button
                           onClick={handleExportPDF}
-                          className="w-full  bg-slate-800 hover:bg-slate-900 hover:cursor-pointer text-slate-50 px-5 py-2.5 font-semibold transition-all rounded"
+                          className="w-full  bg-blue-500 hover:bg-blue-600 hover:cursor-pointer text-slate-50 px-5 py-2.5 font-semibold transition-all rounded"
                         >
                           Exporter PDF
                         </button>
                       </div>
                     </div>
                     {exportErrors.general && (
-                      <p className="text-rose-500 text-[11px] font-bold mt-2">
+                      <p className="text-rose-500 text-left text-[11px] font-bold mt-2">
                         {exportErrors.general}
                       </p>
                     )}
@@ -557,7 +576,28 @@ function App() {
                 </h2>
               </div>
 
-              <div className="relative max-h-[90vh] overflow-y-auto border border-slate-200 ">
+              <div className="px-4 md:px-6 py-3 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-500 no-print">
+                <div className="flex items-center gap-2">
+                  <select
+                    id="rows-per-page"
+                    value={rowsPerPage}
+                    onChange={(e) => handleRowsPerPageChange(e.target.value)}
+                    className="px-3 py-2 bg-white border border-slate-300 rounded text-sm text-slate-900 outline-none"
+                  >
+                    <option value="all">Tout afficher</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={30}>30</option>
+                    <option value={50}>50</option>
+                  </select>
+                </div>
+                <span className="text-slate-900" >
+                  Affichage de <strong>{displayStart}</strong> à <strong>{displayEnd}</strong> sur{" "}
+                  <strong>{totalItems}</strong> entrées
+                </span>
+              </div>
+
+              <div className="sticky top-20 md:top-24 z-10 max-h-[90vh] overflow-y-auto border border-slate-200 ">
                 <table className="w-full text-left border-collapse print:mt-6 print:pt-6">
                   <thead className="">
                     <tr className="  border-slate-200  ">
@@ -599,7 +639,7 @@ function App() {
                           </div>
                         </td>
                       </tr>
-                    ) : transactions.items.length === 0 ? (
+                    ) : totalItems === 0 ? (
                       <tr>
                         <td
                           colSpan={isAdmin ? 6 : 5}
@@ -611,7 +651,7 @@ function App() {
                         </td>
                       </tr>
                     ) : (
-                      transactions.items.map((t) => (
+                      currentData.map((t) => (
                         <tr
                           key={t.id}
                           className="odd:bg-slate-100 hover:bg-slate-300 transition-colors"
@@ -619,7 +659,7 @@ function App() {
                           <td className="px-6 py-4 text-slate-600 whitespace-nowrap text-sm">
                             {new Date(t.date).toLocaleDateString("fr-FR")}
                           </td>
-                          <td className="px-6 py-4 font-medium text-slate-900 text-sm italic">
+                          <td className="px-6 py-4 font-medium text-slate-900 text-xs italic">
                             {t.libelle.toUpperCase()}
                           </td>
                           <td className="px-6 py-4 text-right text-emerald-600 font-bold text-sm">
@@ -656,7 +696,7 @@ function App() {
                       ))
                     )}
                   </tbody>
-                  {!loading && transactions.items.length > 0 && (
+                  {!loading && totalItems > 0 && (
                     <tfoot>
                       <tr className="bg-slate-900 text-white font-bold">
                         <td
@@ -681,6 +721,90 @@ function App() {
                     </tfoot>
                   )}
                 </table>
+              </div>
+              <div className="px-4 md:px-6 py-4 space-y-3 flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-start gap-3 no-print">
+                  <div className="text-sm text-slate-900">
+                    Affichage de <strong>{displayStart}</strong> à{" "}
+                    <strong>{displayEnd}</strong> sur <strong>{totalItems}</strong>{" "}
+                    entrées
+                  </div>
+                </div>
+                {!loading && totalItems > 0 && (
+                  <div className="no-print flex flex-wrap items-center justify-center md:justify-start gap-2">
+                    <div className="flex items-center gap-2">
+                      <select
+                        id="rows-per-page"
+                        value={rowsPerPage}
+                        onChange={(e) => handleRowsPerPageChange(e.target.value)}
+                        className="px-3 py-2 bg-white border border-slate-300 rounded text-sm text-slate-900 outline-none"
+                      >
+                        <option value="all">Tout afficher</option>
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={30}>30</option>
+                        <option value={50}>50</option>
+                      </select>
+                    </div>
+                    {showPaginationControls && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => setCurrentPage(1)}
+                          disabled={currentPage === 1}
+                          className={`px-3 py-2 text-sm border rounded transition-colors ${
+                            currentPage === 1
+                              ? "text-slate-200 bg-slate-500 border-slate-500 cursor-not-allowed"
+                              : "text-slate-50 bg-slate-800 border-slate-800 hover:bg-slate-700 hover:border-slate-700 hover:cursor-pointer"
+                          }`}
+                        >
+                          Premier
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                          disabled={currentPage === 1}
+                          className={`px-3 py-2 text-sm border rounded transition-colors ${
+                            currentPage === 1
+                              ? "text-slate-200 bg-slate-500 border-slate-500 cursor-not-allowed"
+                              : "text-slate-50 bg-slate-800 border-slate-800 hover:bg-slate-700 hover:border-slate-700 hover:cursor-pointer"
+                          }`}
+                        >
+                          {"<"} Précédent
+                        </button>
+                        <span className="px-3 py-2 text-sm text-slate-100 bg-slate-900 border border-slate-800 rounded">
+                          Page <strong>{currentPage}</strong> sur <strong>{totalPages}</strong>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                          }
+                          disabled={currentPage === totalPages}
+                          className={`px-3 py-2 text-sm border rounded transition-colors ${
+                            currentPage === totalPages
+                              ? "text-slate-200 bg-slate-500 border-slate-500 cursor-not-allowed"
+                              : "text-slate-50 bg-slate-800 border-slate-800 hover:bg-slate-700 hover:border-slate-700 hover:cursor-pointer"
+                          }`}
+                        >
+                          Suivant {">"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setCurrentPage(totalPages)}
+                          disabled={currentPage === totalPages}
+                          className={`px-3 py-2 text-sm border rounded transition-colors ${
+                            currentPage === totalPages
+                              ? "text-slate-200 bg-slate-500 border-slate-500 cursor-not-allowed"
+                              : "text-slate-50 bg-slate-800 border-slate-800 hover:bg-slate-700 hover:border-slate-700 hover:cursor-pointer"
+                          }`}
+                        >
+                          Dernier
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
               {/* <footer id='pdf-footer' className="print-only mt-3 text-sm print:fixed print:bottom-8 print:w-full print:text-center print:bg-red-500">
                 <p className='text-center' >Résidence <strong className='uppercase' >la félicité</strong>, bis au Lot VB 72 ZX Ambatoroaka.</p>
@@ -798,7 +922,7 @@ function App() {
         </div>
       )}
 
-      <footer class="bg-neutral-primary-soft rounded-base shadow-xs border border-default fixed bottom-0 w-full bg-slate-900">
+      <footer class="bg-neutral-primary-soft rounded-base shadow-xs border border-default  bg-slate-900">
         <div class="w-full mx-auto max-w-7xl p-4 md:flex md:items-center md:justify-between">
           <span class="text-slate-50 text-sm text-body sm:text-center">
             © {new Date().getFullYear()}{" "}
