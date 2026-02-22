@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
 import { supabase } from "../lib/supabaseClient";
 
 export default function Login() {
@@ -18,7 +19,9 @@ export default function Login() {
 
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) alert(error.message);
+      if (error) {
+        toast.error(error.message || "Authentication failed");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -26,6 +29,23 @@ export default function Login() {
 
   return (
     <section className="min-h-screen bg-gray-50">
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          duration: 3500,
+          style: {
+            background: "#0f172a",
+            color: "#f8fafc",
+            border: "1px solid #dc2626",
+          },
+          error: {
+            iconTheme: {
+              primary: "#dc2626",
+              secondary: "#f8fafc",
+            },
+          },
+        }}
+      />
       <div className="grid max-w-7xl px-4 py-8 mx-auto lg:gap-20 lg:py-16 lg:grid-cols-12">
         <div className="w-full place-self-center lg:col-span-6">
           <div className="p-6 mx-auto bg-white rounded-lg shadow sm:max-w-xl sm:p-8">
