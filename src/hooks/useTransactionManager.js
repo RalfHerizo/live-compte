@@ -59,8 +59,7 @@ export const useTransactionManager = (initialData = [], session = null) => {
     const depense = Number(newTransaction.depense) || 0;
 
     if (recette === 0 && depense === 0) {
-      alert("Veuillez saisir un montant (Recette ou Dépense).");
-      return;
+      throw new Error("Veuillez saisir un montant (Recette ou Dépense).");
     }
 
     const transactionToSave = {
@@ -81,7 +80,7 @@ export const useTransactionManager = (initialData = [], session = null) => {
 
       setTransactions((prev) => [...prev, data[0]]);
     } catch (error) {
-      alert("Erreur lors de l'enregistrement : " + error.message);
+      throw error;
     } finally {
       setIsAdding(false);
     }
@@ -104,7 +103,7 @@ export const useTransactionManager = (initialData = [], session = null) => {
         prev.filter((transaction) => !idsToDelete.includes(transaction.id))
       );
     } catch (error) {
-      alert("Erreur lors de la suppression : " + error.message);
+      throw error;
     } finally {
       setIsDeleting(false);
     }

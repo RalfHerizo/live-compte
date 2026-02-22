@@ -1,6 +1,7 @@
 ﻿import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTransactionManager } from "./hooks/useTransactionManager";
 import { usePagination } from "./hooks/usePagination";
+import { Toaster, toast } from "react-hot-toast";
 import exportPDF from "./core/finance";
 import Login from "./components/Login";
 import { supabase } from "./lib/supabaseClient";
@@ -94,7 +95,7 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let newErrors = {};
@@ -115,15 +116,20 @@ function App() {
       return;
     }
 
-    addTransaction({
-      ...formData,
-      libelle: formData.libelle.trim().toUpperCase(),
-      recette: Number(formData.recette) || 0,
-      depense: Number(formData.depense) || 0,
-    });
+    try {
+      await addTransaction({
+        ...formData,
+        libelle: formData.libelle.trim().toUpperCase(),
+        recette: Number(formData.recette) || 0,
+        depense: Number(formData.depense) || 0,
+      });
 
-    setFormData({ ...formData, libelle: "", recette: "", depense: "" });
-    setErrors({});
+      setFormData({ ...formData, libelle: "", recette: "", depense: "" });
+      setErrors({});
+      toast.success("Transaction enregistrée !");
+    } catch (error) {
+      toast.error("Erreur : " + (error?.message || "Échec de l'enregistrement"));
+    }
   };
 
   const handleDateModeChange = (mode) => {
@@ -257,21 +263,26 @@ function App() {
   const confirmDelete = async () => {
     if (deleteModal.transactionIds.length === 0) return;
 
-    if (deleteModal.mode === "bulk") {
-      await deleteTransactions(deleteModal.transactionIds);
-    } else {
-      await deleteTransaction(deleteModal.transactionIds[0]);
-    }
+    const idsToDelete = [...deleteModal.transactionIds];
 
-    setSelectedIds((prev) =>
-      prev.filter((id) => !deleteModal.transactionIds.includes(id))
-    );
-    setDeleteModal({
-      isOpen: false,
-      mode: "single",
-      transactionIds: [],
-      transactionLabel: "",
-    });
+    try {
+      if (deleteModal.mode === "bulk") {
+        await deleteTransactions(idsToDelete);
+      } else {
+        await deleteTransaction(idsToDelete[0]);
+      }
+
+      setSelectedIds((prev) => prev.filter((id) => !idsToDelete.includes(id)));
+      setDeleteModal({
+        isOpen: false,
+        mode: "single",
+        transactionIds: [],
+        transactionLabel: "",
+      });
+      toast.success("Suppression effectuée");
+    } catch (error) {
+      toast.error("Erreur : " + (error?.message || "Échec de la suppression"));
+    }
   };
 
   const hasActiveFilters =
@@ -289,6 +300,35 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#0f172a",
+            color: "#f8fafc",
+            border: "1px solid #334155",
+          },
+          success: {
+            style: {
+              border: "1px solid #16a34a",
+            },
+            iconTheme: {
+              primary: "#16a34a",
+              secondary: "#f8fafc",
+            },
+          },
+          error: {
+            style: {
+              border: "1px solid #dc2626",
+            },
+            iconTheme: {
+              primary: "#dc2626",
+              secondary: "#f8fafc",
+            },
+          },
+        }}
+      />
       <header className="w-full bg-slate-900 text-slate-100  no-print">
         <div className="max-w-350 mx-auto px-4 md:px-8 py-4">
           <div className="flex items-center justify-between gap-4">
