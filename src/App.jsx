@@ -13,6 +13,7 @@ function App() {
     .map((email) => email.trim().toLowerCase())
     .filter(Boolean);
   const [session, setSession] = useState(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   const {
     transactions,
@@ -84,12 +85,14 @@ function App() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setIsAuthLoading(false);
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      setIsAuthLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -290,6 +293,17 @@ function App() {
     dateFilter.mode !== "all" ||
     !!dateFilter.from ||
     !!dateFilter.to;
+
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 text-slate-100">
+          <span className="animate-spin inline-block w-10 h-10 border-4 border-slate-300 border-t-transparent rounded-full"></span>
+          <p className="text-sm tracking-wide">Chargement en cours...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!session) return <Login />;
 
