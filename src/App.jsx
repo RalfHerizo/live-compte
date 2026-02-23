@@ -348,8 +348,8 @@ function App() {
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <img
-                src="/raoelison-logo-light.png"
-                alt="Logo Raoelison"
+                src={import.meta.env.VITE_LOGIN_LOGO_URL || "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"}
+                alt="Logo application"
                 className="w-10 h-10 rounded-lg object-cover"
               />
               <div>
