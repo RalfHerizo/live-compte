@@ -145,17 +145,17 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
   const tableData = transactions.map((t) => [
     new Date(t.date).toLocaleDateString('fr-FR'),
     t.libelle.toUpperCase(),
-    t.recette > 0 ? `${t.recette.toLocaleString()}\u00A0Ar` : '-',
-    t.depense > 0 ? `${t.depense.toLocaleString()}\u00A0Ar` : '-',
-    `${t.solde.toLocaleString()}\u00A0Ar`,
+    t.recette > 0 ? `${t.recette.toLocaleString()}\u00A0€` : '-',
+    t.depense > 0 ? `${t.depense.toLocaleString()}\u00A0€` : '-',
+    `${t.solde.toLocaleString()}\u00A0€`,
   ]);
 
   const totalRow = [
     'TOTAL',
     '',
-    `${transactions.reduce((sum, t) => sum + (t.recette || 0), 0).toLocaleString()}\u00A0Ar`,
-    `${transactions.reduce((sum, t) => sum + (t.depense || 0), 0).toLocaleString()}\u00A0Ar`,
-    `${transactions[transactions.length - 1]?.solde.toLocaleString()}\u00A0Ar`,
+    `${transactions.reduce((sum, t) => sum + (t.recette || 0), 0).toLocaleString()}\u00A0€`,
+    `${transactions.reduce((sum, t) => sum + (t.depense || 0), 0).toLocaleString()}\u00A0€`,
+    `${transactions[transactions.length - 1]?.solde.toLocaleString()}\u00A0€`,
   ];
 
   autoTable(doc, {

@@ -580,7 +580,7 @@ function App() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase text-emerald-600 mb-1">
-                      Recette (Ar)
+                      Recette (&euro;)
                     </label>
 
                     <input
@@ -595,7 +595,7 @@ function App() {
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase text-rose-600 mb-1">
-                      Depense (Ar)
+                      Depense (&euro;)
                     </label>
                     <input
                       type="number"
@@ -870,16 +870,16 @@ function App() {
                           </td>
                           <td className="px-6 py-4 text-right text-emerald-600 font-bold text-sm">
                             {t.recette > 0
-                              ? `${t.recette.toLocaleString()} Ar`
+                              ? `${t.recette.toLocaleString()} €`
                               : "-"}
                           </td>
                           <td className="px-6 py-4 text-right text-rose-600 font-bold text-sm">
                             {t.depense > 0
-                              ? `${t.depense.toLocaleString()} Ar`
+                              ? `${t.depense.toLocaleString()} €`
                               : "-"}
                           </td>
                           <td className="px-6 py-4 text-right font-black text-slate-900  text-sm">
-                            {t.solde.toLocaleString()} Ar
+                            {t.solde.toLocaleString()} €
                           </td>
                           {isAdmin && (
                             <td className="px-2">
@@ -912,13 +912,13 @@ function App() {
                           TOTAL
                         </td>
                         <td className="px-6 py-5 text-right text-emerald-400 bold">
-                          {transactions.totalRecettes.toLocaleString()} Ar
+                          {transactions.totalRecettes.toLocaleString()} €
                         </td>
                         <td className="px-6 py-5 text-right text-rose-400 bold">
-                          {transactions.totalDepenses.toLocaleString()} Ar
+                          {transactions.totalDepenses.toLocaleString()} €
                         </td>
                         <td className="px-6 py-5 text-right bold">
-                          {transactions.soldeFinal.toLocaleString()} Ar
+                          {transactions.soldeFinal.toLocaleString()} €
                         </td>
                         {isAdmin && (
                           <td className="px-6 py-5 text-right bold rounded-br"></td>
@@ -1157,7 +1157,7 @@ function App() {
           <span class="text-slate-50 text-sm text-body sm:text-center">
             © {new Date().getFullYear()}{" "}
             <a href="https://flowbite.com/" class="hover:underline">
-              Raoelison-Compte
+              Démo-public
             </a>
             . Tous droits réservés.
           </span>

@@ -36,7 +36,7 @@ describe("App - Business and critical flows", () => {
     await renderDashboard();
     await screen.findByText(/VENTE A/i);
 
-    expect(screen.getAllByText(/60[\s,\u202f]000 Ar/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/60[\s,\u202f]000\s*€/i).length).toBeGreaterThan(0);
   });
 
   it("formats local date and large numbers with thousand separators", async () => {
@@ -55,7 +55,7 @@ describe("App - Business and critical flows", () => {
     await screen.findByText(/VERY BIG ENTRY/i);
 
     expect(screen.getByText("10/02/2026")).toBeInTheDocument();
-    expect(screen.getAllByText(/1[\s,\u202f]234[\s,\u202f]567 Ar/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/1[\s,\u202f]234[\s,\u202f]567\s*€/i).length).toBeGreaterThan(0);
   });
 
   it("opens and closes the delete confirmation modal without deleting on cancel", async () => {
