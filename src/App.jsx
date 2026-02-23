@@ -493,14 +493,6 @@ function App() {
                   </>
                 )}
               </div>
-              {/* <div className="md:col-span-3">
-                <button
-                  onClick={handleExportPDF}
-                  className="w-full bg-slate-800 hover:bg-slate-900 hover:cursor-pointer text-slate-50 px-5 py-2.5 font-semibold transition-all rounded"
-                >
-                  Exporter PDF
-                </button>
-              </div> */}
             </div>
           </div>
         </div>
@@ -644,7 +636,7 @@ function App() {
               {isAdmin && (
                 <div className="print-only bg-slate-900 py-3">
                   <h2 className="text-center">
-                    {/* Résidence <strong className='uppercase'>la félicité</strong> Ambatoroaka
+                    {/* Espace <strong className='uppercase'>DEMO PUBLIC</strong> Edition demo
                     <br /> */}
                     <div className="  mx-5 ">
                       <div className="grid grid-cols-4 items-center ">
@@ -1022,9 +1014,6 @@ function App() {
                   </div>
                 )}
               </div>
-              {/* <footer id='pdf-footer' className="print-only mt-3 text-sm print:fixed print:bottom-8 print:w-full print:text-center print:bg-red-500">
-                <p className='text-center' >Résidence <strong className='uppercase' >la félicité</strong>, bis au Lot VB 72 ZX Ambatoroaka.</p>
-              </footer> */}
             </div>
           </main>
         </div>

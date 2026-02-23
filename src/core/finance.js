@@ -84,13 +84,13 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
     
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
-    doc.text("Résidence ", 65, yPos);
+    doc.text("Espace ", 65, yPos);
     
     doc.setFont("helvetica", "bold");
-    doc.text("LA FELICITE", 86, yPos); 
+    doc.text("DEMO PUBLIC", 86, yPos); 
     
     doc.setFont("helvetica", "normal");
-    doc.text("Ambatoroaka", 113, yPos);
+    doc.text("Edition demo", 118, yPos);
 
     // Ligne 2 : libelle + dates en gras
     const headerParts = [
@@ -123,9 +123,9 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
     const pageWidth = doc.internal.pageSize.width;
     doc.setFontSize(10);
 
-    const prefix = "Résidence ";
-    const boldPart = "LA FELICITE";
-    const suffix = " - bis au Lot VB 72 ZX Ambatoroaka";
+    const prefix = "Espace ";
+    const boldPart = "DEMO PUBLIC";
+    const suffix = " - adresse de demonstration";
     // Calcul pour centrer l'ensemble
     const totalWidth = doc.getTextWidth(prefix + boldPart + suffix);
     let currentX = (pageWidth - totalWidth) / 2;
