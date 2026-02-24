@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { supabase } from "../lib/supabaseClient";
+import { PASSWORD_CHANGE_RELOGIN_NOTICE_KEY } from "../constants/auth";
 
 export default function Login() {
   const defaultLoginLogoUrl =
@@ -12,6 +13,15 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loginNotice, setLoginNotice] = useState("");
+
+  useEffect(() => {
+    const notice = sessionStorage.getItem(PASSWORD_CHANGE_RELOGIN_NOTICE_KEY);
+    if (!notice) return;
+
+    setLoginNotice(notice);
+    sessionStorage.removeItem(PASSWORD_CHANGE_RELOGIN_NOTICE_KEY);
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -65,6 +75,11 @@ export default function Login() {
             <p className="text-sm font-light text-gray-500">
               Connectez-vous pour acceder a votre gestion de tresorerie.
             </p>
+            {loginNotice && (
+              <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                {loginNotice}
+              </div>
+            )}
 
             <form className="mt-4 space-y-6 sm:mt-6" onSubmit={handleLogin}>
               <div className="space-y-4">

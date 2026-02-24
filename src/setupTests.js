@@ -9,6 +9,7 @@ vi.mock("/src/lib/supabaseClient.js", () => ({
 
 beforeEach(() => {
   resetMockSupabase();
+  sessionStorage.clear();
   vi.stubEnv("VITE_APP_TITLE", "Raoelison Compte");
   vi.stubEnv("VITE_ADMIN_EMAILS", "admin@test.com");
   vi.stubEnv("VITE_LOGIN_LOGO_URL", "/raoelison-logo.png");

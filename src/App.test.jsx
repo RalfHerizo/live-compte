@@ -2,7 +2,13 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import App from "./App";
-import { getDeleteInSpy, getInsertSpy, setMockSession, setMockTransactions } from "./test-utils/supabaseMock";
+import {
+  getDeleteInSpy,
+  getInsertSpy,
+  mockSupabase,
+  setMockSession,
+  setMockTransactions,
+} from "./test-utils/supabaseMock";
 
 const adminSession = {
   user: {
@@ -161,5 +167,71 @@ describe("App - Business and critical flows", () => {
 
     await waitFor(() => expect(getDeleteInSpy).toHaveBeenCalledTimes(1));
     expect(screen.queryByText(/Confirmer la suppression/i)).not.toBeInTheDocument();
+  });
+
+  it("shows account settings only for admin in user dropdown", async () => {
+    const user = userEvent.setup();
+    setMockSession(viewerSession);
+    setMockTransactions(baseTransactions);
+
+    await renderDashboard();
+    await user.click(screen.getByRole("button", { name: /ouvrir le menu utilisateur/i }));
+
+    expect(
+      screen.queryByRole("button", { name: /paramètre du compte/i })
+    ).not.toBeInTheDocument();
+  });
+
+  it("opens account modal and toggles password visibility controls", async () => {
+    const user = userEvent.setup();
+    setMockSession(adminSession);
+    setMockTransactions(baseTransactions);
+
+    await renderDashboard();
+    await user.click(screen.getByRole("button", { name: /ouvrir le menu utilisateur/i }));
+    await user.click(screen.getByRole("menuitem", { name: /paramètre du compte/i }));
+
+    const currentPasswordInput = screen.getByPlaceholderText(/mot de passe actuel/i);
+    const newPasswordInput = screen.getByPlaceholderText(/nouveau mot de passe/i);
+
+    expect(currentPasswordInput).toHaveValue("");
+    expect(currentPasswordInput).toHaveAttribute("type", "password");
+    expect(newPasswordInput).toHaveAttribute("type", "password");
+
+    await user.click(
+      screen.getByRole("button", { name: /afficher le mot de passe actuel/i })
+    );
+    expect(currentPasswordInput).toHaveAttribute("type", "text");
+
+    await user.click(screen.getByRole("button", { name: /afficher le nouveau mot de passe/i }));
+    expect(newPasswordInput).toHaveAttribute("type", "text");
+  });
+
+  it("logs out admin and shows re-login notice after successful password update", async () => {
+    const user = userEvent.setup();
+    setMockSession(adminSession);
+    setMockTransactions(baseTransactions);
+
+    await renderDashboard();
+    await user.click(screen.getByRole("button", { name: /ouvrir le menu utilisateur/i }));
+    await user.click(screen.getByRole("menuitem", { name: /paramètre du compte/i }));
+
+    await user.type(
+      screen.getByPlaceholderText(/mot de passe actuel/i),
+      "OldPassword123"
+    );
+    await user.type(
+      screen.getByPlaceholderText(/nouveau mot de passe/i),
+      "NewPassword123"
+    );
+    await user.click(screen.getByRole("button", { name: /mettre à jour/i }));
+
+    await waitFor(() =>
+      expect(mockSupabase.auth.updateUser).toHaveBeenCalledWith({
+        password: "NewPassword123",
+      })
+    );
+    await waitFor(() => expect(mockSupabase.auth.signOut).toHaveBeenCalledTimes(1));
+    await screen.findByText(/veuillez vous reconnectez avec votre nouveau mot de passe\./i);
   });
 });
