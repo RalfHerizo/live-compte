@@ -499,23 +499,23 @@ function App() {
       />
       <header className="w-full bg-slate-900 text-slate-100  no-print">
         <div className="max-w-350 mx-auto px-4 md:px-8 py-4">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-3">
               <img
                 src="/raoelison-logo-light.png"
                 alt="Logo Raoelison"
-                className="w-10 h-10 rounded-lg object-cover"
+                className="h-8 w-8 rounded-lg object-cover sm:h-10 sm:w-10"
               />
-              <div>
-                <h1 className="text-xl md:text-2xl font-extrabold tracking-tight">
+              <div className="min-w-0">
+                <h1 className="truncate text-base font-extrabold tracking-tight sm:text-xl md:text-2xl">
                   {app_title}
                 </h1>
-                <p className="text-slate-300 text-sm">
+                <p className="truncate text-xs text-slate-300 sm:text-sm">
                   Gestion trésorerie en temps réel
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 md:gap-3">
+            <div className="flex shrink-0 items-center gap-2 md:gap-3">
               <button
                 type="button"
                 onClick={() => setShowToolbar((prev) => !prev)}
@@ -859,10 +859,10 @@ function App() {
                   <h2 className="text-center">
                     {/* Résidence <strong className='uppercase'>la félicité</strong> Ambatoroaka
                     <br /> */}
-                    <div className="  mx-5 ">
-                      <div className="grid grid-cols-4 items-center ">
-                        <div className="col-span-3 flex items-center justify-start text-slate-50 ">
-                          Facture du
+                    <div className="mx-3 md:mx-5">
+                      <div className="flex flex-col gap-3 lg:grid lg:grid-cols-4 lg:items-center">
+                        <div className="flex flex-wrap items-center justify-start gap-2 text-xs text-slate-50 sm:text-sm lg:col-span-3">
+                          <span className="whitespace-nowrap">Facture du</span>
                           <input
                             type="text"
                             placeholder="Libellé"
@@ -874,9 +874,9 @@ function App() {
                               });
                               if (exportErrors.general) setExportErrors({});
                             }}
-                            className="text-slate-900 mx-2 inline-block border-gray-400 bg-slate-100 outline-none text-center w-40 p-1 rounded"
+                            className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none sm:w-40"
                           />
-                          de
+                          <span className="whitespace-nowrap">de</span>
                           <input
                             type="date"
                             value={printDetails.dateFrom}
@@ -887,9 +887,9 @@ function App() {
                               });
                               if (exportErrors.general) setExportErrors({});
                             }}
-                            className=" text-slate-900 mx-2 inline-block bg-slate-100 border-gray-400 outline-none text-center w-40 p-1 rounded"
+                            className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none sm:w-40"
                           />
-                          au
+                          <span className="whitespace-nowrap">au</span>
                           <input
                             type="date"
                             value={printDetails.dateTo}
@@ -900,13 +900,13 @@ function App() {
                               });
                               if (exportErrors.general) setExportErrors({});
                             }}
-                            className=" text-slate-900 mx-2 inline-block bg-slate-100 border-gray-400 outline-none text-center w-40 p-1 rounded"
+                            className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none sm:w-40"
                           />
                         </div>
-                        <div className="0">
+                        <div className="w-full">
                           <button
                             onClick={handleExportPDF}
-                            className="w-full  bg-blue-500 hover:bg-blue-600 hover:cursor-pointer text-slate-50 px-5 py-2.5 font-semibold transition-all rounded"
+                            className="w-full rounded bg-blue-500 px-4 py-2.5 text-sm font-semibold text-slate-50 transition-all hover:cursor-pointer hover:bg-blue-600 sm:px-5"
                           >
                             Exporter PDF
                           </button>
@@ -1094,17 +1094,17 @@ function App() {
                           <td className="px-6 py-4 font-medium text-slate-900 text-xs italic">
                             {t.libelle.toUpperCase()}
                           </td>
-                          <td className="px-6 py-4 text-right text-emerald-600 font-bold text-sm">
+                          <td className="px-6 py-4 text-right text-emerald-600 font-bold text-sm whitespace-nowrap">
                             {t.recette > 0
                               ? `${t.recette.toLocaleString()} Ar`
                               : "-"}
                           </td>
-                          <td className="px-6 py-4 text-right text-rose-600 font-bold text-sm">
+                          <td className="px-6 py-4 text-right text-rose-600 font-bold text-sm whitespace-nowrap">
                             {t.depense > 0
                               ? `${t.depense.toLocaleString()} Ar`
                               : "-"}
                           </td>
-                          <td className="px-6 py-4 text-right font-black text-slate-900  text-sm">
+                          <td className="px-6 py-4 text-right font-black text-slate-900 text-sm whitespace-nowrap">
                             {t.solde.toLocaleString()} Ar
                           </td>
                           {isAdmin && (
@@ -1137,13 +1137,13 @@ function App() {
                         >
                           TOTAL
                         </td>
-                        <td className="px-6 py-5 text-right text-emerald-400 bold">
+                        <td className="px-6 py-5 text-right text-emerald-400 bold whitespace-nowrap">
                           {transactions.totalRecettes.toLocaleString()} Ar
                         </td>
-                        <td className="px-6 py-5 text-right text-rose-400 bold">
+                        <td className="px-6 py-5 text-right text-rose-400 bold whitespace-nowrap">
                           {transactions.totalDepenses.toLocaleString()} Ar
                         </td>
-                        <td className="px-6 py-5 text-right bold">
+                        <td className="px-6 py-5 text-right bold whitespace-nowrap">
                           {transactions.soldeFinal.toLocaleString()} Ar
                         </td>
                         {isAdmin && (
@@ -1154,17 +1154,17 @@ function App() {
                   )}
                 </table>
               </div>
-              <div className="px-4 md:px-6 py-4 space-y-3 flex items-center justify-between">
-                <div className="flex flex-wrap items-center justify-start gap-3 no-print">
-                  <div className="text-sm text-slate-900">
+              <div className="px-4 md:px-6 py-4 space-y-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex w-full flex-wrap items-center justify-center gap-3 no-print lg:w-auto lg:justify-start">
+                  <div className="text-center text-sm text-slate-900 lg:text-left">
                     Affichage de <strong>{displayStart}</strong> à{" "}
                     <strong>{displayEnd}</strong> sur <strong>{totalItems}</strong>{" "}
                     entrées
                   </div>
                 </div>
                 {!loading && totalItems > 0 && (
-                  <div className="no-print flex flex-wrap items-center justify-center md:justify-start gap-2">
-                    <div className="flex items-center gap-2">
+                  <div className="no-print flex w-full flex-col items-stretch justify-center gap-2 sm:flex-row sm:flex-wrap sm:items-center lg:w-auto lg:justify-end">
+                    <div className="flex items-center justify-center gap-2 sm:justify-start">
                       <select
                         id="rows-per-page"
                         value={rowsPerPage}
@@ -1189,7 +1189,7 @@ function App() {
                       )}
                     </div>
                     {showPaginationControls && (
-                      <>
+                      <div className="flex flex-wrap items-center justify-center gap-2">
                         <button
                           type="button"
                           onClick={() => setCurrentPage(1)}
@@ -1243,7 +1243,7 @@ function App() {
                         >
                           Dernier
                         </button>
-                      </>
+                      </div>
                     )}
                   </div>
                 )}
