@@ -335,7 +335,7 @@ function App() {
     (session.user.email || "").trim().toLowerCase()
   );
   const userEmail = session.user.email || "";
-  const userInitial = (userEmail[0] || "U").toUpperCase();
+  const userAvatar = isAdmin ? "https://img.freepik.com/vecteurs-premium/jeune-homme-mexicain-detendu-debout-illustration-avatar-vectoriel-2d-gars-joyeux-visage-personnage-dessin-anime-latino-americain-photo-tete-positive-confiante-posant-couleur-plate-image-profil-utilisateur-isolee-blanc_151150-21145.jpg?ga=GA1.1.1249139299.1762579352&semt=ais_user_personalization&w=740&q=80": "https://flowbite.com/docs/images/people/profile-picture-5.jpg";
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
@@ -415,22 +415,49 @@ function App() {
                   aria-expanded={showUserMenu}
                   aria-haspopup="menu"
                   aria-label="Ouvrir le menu utilisateur"
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-600 bg-slate-800 text-sm font-semibold text-slate-100 transition-all hover:cursor-pointer hover:bg-slate-700"
+                  className="relative flex h-9 w-9 items-center justify-center rounded-full border border-green-500 bg-slate-800 text-sm font-semibold text-slate-100 transition-all hover:cursor-pointer hover:bg-slate-700"
                 >
-                  {userInitial}
+                  <img
+                    src={userAvatar}
+                    alt="Photo de profil"
+                    className="h-full w-full rounded-full border-2 border-green-500 object-cover"
+                  />
+                  <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border border-slate-900 bg-green-400"></span>
                 </button>
                 {showUserMenu && (
-                  <div className="absolute right-0 z-50 mt-2 w-64 rounded border border-slate-700 bg-slate-900 shadow-lg">
+                  <div className="absolute right-0 z-50 mt-2 w-64 rounded border border-slate-700 bg-slate-800 shadow-lg">
                     <div className="border-b border-slate-700 px-4 py-3">
-                      <span className="block text-sm text-slate-200 truncate">{userEmail}</span>
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <img
+                            src={userAvatar}
+                            alt="Utilisateur connecté"
+                            className="h-8 w-8 rounded-full border-2 border-green-500 object-cover"
+                          />
+                          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border border-slate-900 bg-green-400"></span>
+                        </div>
+                        <span className="block text-sm text-slate-200 truncate">{userEmail}</span>
+                      </div>
                     </div>
                     <ul className="py-1 text-sm text-slate-200" role="menu">
                       <li>
                         <a
                           href="#"
                           role="menuitem"
-                          className="block px-4 py-2 transition-colors hover:bg-slate-800"
+                          className="flex items-center gap-2 px-4 py-2 transition-colors hover:bg-slate-800"
                         >
+                          <svg
+                            className="h-4 w-4 text-slate-300"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M11.983 1.904a1 1 0 00-1.966 0l-.155.777a1 1 0 01-.865.795l-.786.105a1 1 0 00-.57 1.714l.569.57a1 1 0 01.263.956l-.199.78a1 1 0 001.485 1.106L10 8.11l.691.497a1 1 0 001.484-1.106l-.198-.78a1 1 0 01.263-.956l.57-.57a1 1 0 00-.571-1.714l-.786-.105a1 1 0 01-.865-.795l-.155-.777zM10 11a3 3 0 100 6 3 3 0 000-6zm-7 3a7 7 0 1114 0 7 7 0 01-14 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
                           Paramètre du compte
                         </a>
                       </li>
@@ -441,10 +468,10 @@ function App() {
                         role="menuitem"
                         onClick={handleSignOut}
                         disabled={isSigningOut}
-                        className={`w-full rounded px-3 py-2 text-left text-sm transition-colors ${
+                        className={`w-full rounded px-3 py-2 text-center text-sm font-semibold border transition-all ${
                           isSigningOut
-                            ? "cursor-not-allowed text-slate-500"
-                            : "text-rose-300 hover:bg-slate-800 hover:cursor-pointer"
+                            ? "bg-rose-300 text-white border-0 cursor-not-allowed"
+                            : "bg-rose-500 text-white border-0 hover:bg-rose-600 hover:cursor-pointer"
                         }`}
                       >
                         {isSigningOut ? "Déconnexion..." : "Déconnexion"}
