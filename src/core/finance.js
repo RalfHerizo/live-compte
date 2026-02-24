@@ -90,7 +90,7 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
     doc.text("LA FELICITE", 86, yPos); 
     
     doc.setFont("helvetica", "normal");
-    doc.text("Ambatoroaka", 113, yPos);
+    doc.text("Ambatoroka", 113, yPos);
 
     // Ligne 2 : libelle + dates en gras
     const headerParts = [
@@ -125,7 +125,7 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
 
     const prefix = "Résidence ";
     const boldPart = "LA FELICITE";
-    const suffix = " - bis au Lot VB 72 ZX Ambatoroaka";
+    const suffix = " VB 72 ZX Ambatoroka";
     // Calcul pour centrer l'ensemble
     const totalWidth = doc.getTextWidth(prefix + boldPart + suffix);
     let currentX = (pageWidth - totalWidth) / 2;
