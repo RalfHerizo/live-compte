@@ -723,30 +723,30 @@ function App() {
           {isAdmin && (
             <aside className="lg:col-span-1 no-print">
               <div className="bg-slate-200 rounded-lg  sticky top-8">
-              <div class="flex items-center justify-between py-3 rounded-t border-b mx-3  border-slate-300">
-                <div class="flex items-center gap-3">
-                  <div class="bg-slate-900 flex items-center justify-center p-3 rounded-xl">
+              <div className="flex items-center justify-between py-3 rounded-t border-b mx-3  border-slate-300">
+                <div className="flex items-center gap-3">
+                  <div className="bg-slate-900 flex items-center justify-center p-3 rounded-xl">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
-                      stroke-width="1.5"
+                      strokeWidth="1.5"
                       stroke="currentColor"
-                      class="size-5 "
+                      className="size-5 "
                     >
                       <path
-                        class="stroke-slate-50"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        className="stroke-slate-50"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"
                       />
                     </svg>
                   </div>
                   <div>
-                    <h3 class="text-lg font-semibold text-slate-900 ">
+                    <h3 className="text-lg font-semibold text-slate-900 ">
                       Nouvelle opération
                     </h3>
-                    <p class=" text-sm ">Gérez vos comptes facilement.</p>
+                    <p className=" text-sm ">Gérez vos comptes facilement.</p>
                   </div>
                 </div>
               </div>
@@ -777,7 +777,7 @@ function App() {
                   )}
                   <input
                     type="text"
-                    minLengh="3"
+                    minLength="3"
                     placeholder="ex: Vente de marchandise..."
                     value={formData.libelle}
                     onChange={(e) => {
@@ -966,8 +966,8 @@ function App() {
                           />
                           <path
                             className="fill-slate-50"
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
                             d="M10.249 2C9.00638 2 7.99902 3.00736 7.99902 4.25V5H5.5C4.25736 5 3.25 6.00736 3.25 7.25C3.25 8.28958 3.95503 9.16449 4.91303 9.42267L5.54076 19.8848C5.61205 21.0729 6.59642 22 7.78672 22H16.2113C17.4016 22 18.386 21.0729 18.4573 19.8848L19.085 9.42267C20.043 9.16449 20.748 8.28958 20.748 7.25C20.748 6.00736 19.7407 5 18.498 5H15.999V4.25C15.999 3.00736 14.9917 2 13.749 2H10.249ZM14.499 5V4.25C14.499 3.83579 14.1632 3.5 13.749 3.5H10.249C9.83481 3.5 9.49902 3.83579 9.49902 4.25V5H14.499ZM5.5 6.5C5.08579 6.5 4.75 6.83579 4.75 7.25C4.75 7.66421 5.08579 8 5.5 8H18.498C18.9123 8 19.248 7.66421 19.248 7.25C19.248 6.83579 18.9123 6.5 18.498 6.5H5.5ZM6.42037 9.5H17.5777L16.96 19.7949C16.9362 20.191 16.6081 20.5 16.2113 20.5H7.78672C7.38995 20.5 7.06183 20.191 7.03807 19.7949L6.42037 9.5Z"
                           />
                         </svg>
@@ -1477,8 +1477,8 @@ function App() {
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-900/50 p-4 no-print">
           <div className="w-full max-w-md overflow-hidden bg-white shadow-xl border border-slate-200 rounded">
             <div className="border-b border-slate-200 px-5 py-4">
-              <div class="border-b border-slate-200 pb-4 flex items-center gap-3 bg-slate-50">
-                <div class="bg-rose-500 flex items-center justify-center p-3 rounded-xl ">
+              <div className="border-b border-slate-200 pb-4 flex items-center gap-3 bg-slate-50">
+                <div className="bg-rose-500 flex items-center justify-center p-3 rounded-xl ">
                   <svg
                     width="24"
                     height="24"
@@ -1496,25 +1496,25 @@ function App() {
                     />
                     <path
                       className="fill-slate-50"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
                       d="M10.249 2C9.00638 2 7.99902 3.00736 7.99902 4.25V5H5.5C4.25736 5 3.25 6.00736 3.25 7.25C3.25 8.28958 3.95503 9.16449 4.91303 9.42267L5.54076 19.8848C5.61205 21.0729 6.59642 22 7.78672 22H16.2113C17.4016 22 18.386 21.0729 18.4573 19.8848L19.085 9.42267C20.043 9.16449 20.748 8.28958 20.748 7.25C20.748 6.00736 19.7407 5 18.498 5H15.999V4.25C15.999 3.00736 14.9917 2 13.749 2H10.249ZM14.499 5V4.25C14.499 3.83579 14.1632 3.5 13.749 3.5H10.249C9.83481 3.5 9.49902 3.83579 9.49902 4.25V5H14.499ZM5.5 6.5C5.08579 6.5 4.75 6.83579 4.75 7.25C4.75 7.66421 5.08579 8 5.5 8H18.498C18.9123 8 19.248 7.66421 19.248 7.25C19.248 6.83579 18.9123 6.5 18.498 6.5H5.5ZM6.42037 9.5H17.5777L16.96 19.7949C16.9362 20.191 16.6081 20.5 16.2113 20.5H7.78672C7.38995 20.5 7.06183 20.191 7.03807 19.7949L6.42037 9.5Z"
                     />
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-slate-900 ">
+                  <h3 className="text-lg font-semibold text-slate-900 ">
                     Confirmer la suppression
                   </h3>
-                  <p class=" text-sm ">Cette action est irréversible.</p>
+                  <p className=" text-sm ">Cette action est irréversible.</p>
                 </div>
                 <button
                   type="button"
-                  class="rounded-full text-slate-50 bg-slate-800 hover:bg-slate-900 transition-all hover:cursor-pointer  text-sm w-6 h-6 ms-auto inline-flex justify-center items-center  dark:hover:text-white"
+                  className="rounded-full text-slate-50 bg-slate-800 hover:bg-slate-900 transition-all hover:cursor-pointer  text-sm w-6 h-6 ms-auto inline-flex justify-center items-center  dark:hover:text-white"
                   onClick={closeDeleteModal}
                 >
                   <svg
-                    class="w-2 h-2"
+                    className="w-2 h-2"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -1522,13 +1522,13 @@ function App() {
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                     />
                   </svg>
-                  <span class="sr-only">Close modal</span>
+                  <span className="sr-only">Close modal</span>
                 </button>
               </div>
               <p className=" p-4 md:p-5 space-y-4 mt-2 text-sm text-slate-600">
@@ -1596,21 +1596,21 @@ function App() {
         </div>
       )}
 
-      <footer class="bg-neutral-primary-soft rounded-base shadow-xs border border-default  bg-slate-900">
-        <div class="w-full mx-auto max-w-7xl p-4 md:flex md:items-center md:justify-between">
-          <span class="text-slate-50 text-sm text-body sm:text-center">
+      <footer className="bg-neutral-primary-soft rounded-base shadow-xs border border-default  bg-slate-900">
+        <div className="w-full mx-auto max-w-7xl p-4 md:flex md:items-center md:justify-between">
+          <span className="text-slate-50 text-sm text-body sm:text-center">
             © {new Date().getFullYear()}{" "}
-            <a href="https://flowbite.com/" class="hover:underline">
+            <a href="https://flowbite.com/" className="hover:underline">
               Raoelison-Compte
             </a>
             . Tous droits réservés.
           </span>
-          <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-body sm:mt-0">
+          <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-body sm:mt-0">
             <li>
               <a
                 target="blank"
                 href="https://www.linkedin.com/in/ralf-lionel-066b20227/"
-                class="text-slate-50 hover:underline"
+                className="text-slate-50 hover:underline"
               >
                 Contactez-le développeur
               </a>

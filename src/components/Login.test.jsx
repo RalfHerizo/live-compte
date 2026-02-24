@@ -2,6 +2,10 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import Login from "./Login";
+import {
+  PASSWORD_CHANGE_RELOGIN_NOTICE,
+  PASSWORD_CHANGE_RELOGIN_NOTICE_KEY,
+} from "../constants/auth";
 
 describe("Login", () => {
   it("toggles password visibility when clicking the eye button", async () => {
@@ -18,5 +22,19 @@ describe("Login", () => {
 
     await user.click(screen.getByRole("button", { name: /masquer le mot de passe/i }));
     expect(passwordInput).toHaveAttribute("type", "password");
+  });
+
+  it("shows reconnect notice when redirected after password update", () => {
+    sessionStorage.setItem(
+      PASSWORD_CHANGE_RELOGIN_NOTICE_KEY,
+      PASSWORD_CHANGE_RELOGIN_NOTICE
+    );
+
+    render(<Login />);
+
+    expect(
+      screen.getByText(/veuillez vous reconnectez avec votre nouveau mot de passe\./i)
+    ).toBeInTheDocument();
+    expect(sessionStorage.getItem(PASSWORD_CHANGE_RELOGIN_NOTICE_KEY)).toBeNull();
   });
 });

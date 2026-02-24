@@ -4,6 +4,7 @@ const state = {
   session: null,
   transactions: [],
   signInError: null,
+  updateUserError: null,
   selectError: null,
   insertError: null,
   deleteError: null,
@@ -77,6 +78,7 @@ export const mockSupabase = {
       return { error: null };
     }),
     signInWithPassword: vi.fn(async () => ({ error: state.signInError })),
+    updateUser: vi.fn(async () => ({ error: state.updateUserError })),
   },
   from: fromSpy,
 };
@@ -93,10 +95,15 @@ export const setMockSignInError = (message) => {
   state.signInError = message ? { message } : null;
 };
 
+export const setMockUpdateUserError = (message) => {
+  state.updateUserError = message ? { message } : null;
+};
+
 export const resetMockSupabase = () => {
   state.session = null;
   state.transactions = [];
   state.signInError = null;
+  state.updateUserError = null;
   state.selectError = null;
   state.insertError = null;
   state.deleteError = null;
