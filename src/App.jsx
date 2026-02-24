@@ -46,6 +46,7 @@ function App() {
   const [searchLibelle, setSearchLibelle] = useState("");
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showToolbar, setShowToolbar] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
@@ -54,6 +55,7 @@ function App() {
     transactionLabel: "",
   });
   const selectAllRef = useRef(null);
+  const userMenuRef = useRef(null);
 
   const {
     currentPage,
@@ -81,6 +83,28 @@ function App() {
       selectAllRef.current.indeterminate = someVisibleSelected && !allVisibleSelected;
     }
   }, [someVisibleSelected, allVisibleSelected]);
+
+  useEffect(() => {
+    const handlePointerDown = (event) => {
+      if (!userMenuRef.current?.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -311,6 +335,7 @@ function App() {
     (session.user.email || "").trim().toLowerCase()
   );
   const userEmail = session.user.email || "";
+  const userInitial = (userEmail[0] || "U").toUpperCase();
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
@@ -362,10 +387,6 @@ function App() {
               </div>
             </div>
             <div className="flex items-center gap-2 md:gap-3">
-              <div className="flex items-center gap-2 text-xs bg-slate-800 rounded border border-slate-700 px-3 py-2 max-w-44 md:max-w-xs">
-                <span className="text-green-400">Connecté :</span>
-                <span className="text-slate-100 truncate">{userEmail}</span>
-              </div>
               <button
                 type="button"
                 onClick={() => setShowToolbar((prev) => !prev)}
@@ -387,18 +408,51 @@ function App() {
                   <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
                 </svg>
               </button>
-              <button
-                type="button"
-                onClick={handleSignOut}
-                disabled={isSigningOut}
-                className={`px-3 py-2 rounded text-sm font-semibold border transition-all ${
-                  isSigningOut
-                    ? "bg-rose-300 text-white border-0 cursor-not-allowed"
-                    : "bg-rose-500 text-white border-0 hover:bg-rose-600 hover:cursor-pointer"
-                }`}
-              >
-                {isSigningOut ? "Déconnexion..." : "Déconnexion"}
-              </button>
+              <div className="relative" ref={userMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => setShowUserMenu((prev) => !prev)}
+                  aria-expanded={showUserMenu}
+                  aria-haspopup="menu"
+                  aria-label="Ouvrir le menu utilisateur"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-600 bg-slate-800 text-sm font-semibold text-slate-100 transition-all hover:cursor-pointer hover:bg-slate-700"
+                >
+                  {userInitial}
+                </button>
+                {showUserMenu && (
+                  <div className="absolute right-0 z-50 mt-2 w-64 rounded border border-slate-700 bg-slate-900 shadow-lg">
+                    <div className="border-b border-slate-700 px-4 py-3">
+                      <span className="block text-sm text-slate-200 truncate">{userEmail}</span>
+                    </div>
+                    <ul className="py-1 text-sm text-slate-200" role="menu">
+                      <li>
+                        <a
+                          href="#"
+                          role="menuitem"
+                          className="block px-4 py-2 transition-colors hover:bg-slate-800"
+                        >
+                          Paramètre du compte
+                        </a>
+                      </li>
+                    </ul>
+                    <div className="border-t border-slate-700 p-1">
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={handleSignOut}
+                        disabled={isSigningOut}
+                        className={`w-full rounded px-3 py-2 text-left text-sm transition-colors ${
+                          isSigningOut
+                            ? "cursor-not-allowed text-slate-500"
+                            : "text-rose-300 hover:bg-slate-800 hover:cursor-pointer"
+                        }`}
+                      >
+                        {isSigningOut ? "Déconnexion..." : "Déconnexion"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
