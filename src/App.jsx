@@ -12,6 +12,7 @@ import {
 
 function App() {
   const app_title = import.meta.env.VITE_APP_TITLE;
+  const isDemoPublic = true;
   const adminEmails = (import.meta.env.VITE_ADMIN_EMAILS || "")
     .split(",")
     .map((email) => email.trim().toLowerCase())
@@ -320,6 +321,11 @@ function App() {
   const handlePasswordUpdate = async (event) => {
     event.preventDefault();
 
+    if (isDemoPublic) {
+      toast("Ceci est une version démo, vous ne pouvez pas changer les identifiants😂.");
+      return;
+    }
+
     const currentPassword = accountModal.currentPassword.trim();
     const newPassword = accountModal.newPassword.trim();
     const errors = {};
@@ -575,7 +581,12 @@ function App() {
                             type="button"
                             role="menuitem"
                             onClick={openAccountModal}
-                            className="flex w-full items-center gap-2 px-4 py-2 text-left transition-colors hover:bg-slate-700 hover:cursor-pointer"
+                            disabled={isDemoPublic}
+                            className={`flex w-full items-center gap-2 px-4 py-2 text-left transition-colors ${
+                              isDemoPublic
+                                ? "opacity-50 cursor-not-allowed"
+                                : "hover:bg-slate-700 hover:cursor-pointer"
+                            }`}
                           >
                             <svg
                               width="24"
@@ -1258,7 +1269,11 @@ function App() {
                   <h3 className="text-lg font-semibold text-slate-900">
                     Paramètre du compte
                   </h3>
-                  <p className="text-sm">Modifier votre mot de passe administrateur.</p>
+                  <p className="text-sm">
+                    {isDemoPublic
+                      ? "Ceci est une version démo, vous ne pouvez pas changer les identifiants😂."
+                      : "Modifier votre mot de passe administrateur."}
+                  </p>
                 </div>
                 <button
                   type="button"
@@ -1448,14 +1463,18 @@ function App() {
                 </button>
                 <button
                   type="submit"
-                  disabled={isUpdatingPassword}
+                  disabled={isUpdatingPassword || isDemoPublic}
                   className={`px-4 py-2 text-sm font-semibold text-white rounded ${
-                    isUpdatingPassword
+                    isUpdatingPassword || isDemoPublic
                       ? "bg-blue-300 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700 hover:cursor-pointer"
                   }`}
                 >
-                  {isUpdatingPassword ? "Mise à jour..." : "Mettre à jour"}
+                  {isUpdatingPassword
+                    ? "Mise à jour..."
+                    : isDemoPublic
+                      ? "Version démo"
+                      : "Mettre à jour"}
                 </button>
               </div>
             </form>
@@ -1589,7 +1608,7 @@ function App() {
         <div className="w-full mx-auto max-w-7xl p-4 md:flex md:items-center md:justify-between">
           <span className="text-slate-50 text-sm text-body sm:text-center">
             © {new Date().getFullYear()}{" "}
-            <a href="https://flowbite.com/" class="hover:underline">
+            <a href="https://flowbite.com/" className="hover:underline">
               Démo-public
             </a>
             . Tous droits réservés.
