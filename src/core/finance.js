@@ -79,7 +79,7 @@ const formatAmountForPdf = (value) => {
     maximumFractionDigits: 2,
   });
   const safeSpacing = localized.replace(/[\u00A0\u202F]/g, ' ');
-  return `${safeSpacing} EUR`;
+  return `${safeSpacing} Ar`;
 };
 
 function exportPDF(transactions, libelle, dateFrom, dateTo) {
@@ -94,13 +94,13 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
 
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
-    doc.text('Espace ', 65, yPos);
+    doc.text('Résidence ', 65, yPos);
 
     doc.setFont('helvetica', 'bold');
-    doc.text('DEMO PUBLIC', 86, yPos);
+    doc.text('LA FELICITE', 86, yPos);
 
     doc.setFont('helvetica', 'normal');
-    doc.text('Edition demo', 118, yPos);
+    doc.text('Ambatoroka', 118, yPos);
 
     const headerParts = [
       { text: 'Facture du ', bold: false },
@@ -132,9 +132,9 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
     const pageWidth = doc.internal.pageSize.width;
     doc.setFontSize(10);
 
-    const prefix = 'Espace ';
-    const boldPart = 'DEMO PUBLIC';
-    const suffix = ' - adresse de demonstration';
+    const prefix = 'Résidence ';
+    const boldPart = 'LA FELICITE';
+    const suffix = ' VB 72 ZX Ambatoroka';
     const totalWidth = doc.getTextWidth(prefix + boldPart + suffix);
     let currentX = (pageWidth - totalWidth) / 2;
 
