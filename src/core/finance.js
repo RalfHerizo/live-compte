@@ -2,9 +2,9 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 /**
- * Calcule le solde cumulé pour chaque transaction.
+ * Calcule le solde cumule pour chaque transaction.
  * @param {Array} transactions - Liste brute (date, libelle, recette, depense)
- * @returns {Array} - Liste enrichie de la propriété 'solde'
+ * @returns {Array} - Liste enrichie de la propriete "solde"
  */
 export const filterTransactionsByDate = (transactions, dateFilter) => {
   if (!dateFilter || dateFilter.mode === "all") {
@@ -41,16 +41,16 @@ export const computeBalances = (transactions) => {
     (a, b) => new Date(a.date) - new Date(b.date)
   );
 
-  const items = sorted.map((transactions) => {
-    const recette = Number(transactions.recette) || 0;
-    const depense = Number(transactions.depense) || 0;
-    
+  const items = sorted.map((transaction) => {
+    const recette = Number(transaction.recette) || 0;
+    const depense = Number(transaction.depense) || 0;
+
     totalRecettes += recette;
     totalDepenses += depense;
-    runningBalance += (recette - depense);
+    runningBalance += recette - depense;
 
     return {
-      ...transactions,
+      ...transaction,
       solde: runningBalance,
     };
   });
@@ -59,7 +59,7 @@ export const computeBalances = (transactions) => {
     items,
     totalRecettes,
     totalDepenses,
-    soldeFinal: runningBalance
+    soldeFinal: runningBalance,
   };
 };
 
@@ -68,8 +68,18 @@ const formatDate = (dateStr) => {
   return date.toLocaleDateString('fr-FR', {
     day: '2-digit',
     month: '2-digit',
-    year: 'numeric'
+    year: 'numeric',
   });
+};
+
+const formatAmountForPdf = (value) => {
+  const amount = Number(value) || 0;
+  const localized = amount.toLocaleString('fr-FR', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+  const safeSpacing = localized.replace(/[\u00A0\u202F]/g, ' ');
+  return `${safeSpacing} EUR`;
 };
 
 function exportPDF(transactions, libelle, dateFrom, dateTo) {
@@ -81,29 +91,28 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
   const addHeader = () => {
     const pageWidth = doc.internal.pageSize.width;
     const yPos = 15;
-    
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.text("Espace ", 65, yPos);
-    
-    doc.setFont("helvetica", "bold");
-    doc.text("DEMO PUBLIC", 86, yPos); 
-    
-    doc.setFont("helvetica", "normal");
-    doc.text("Edition demo", 118, yPos);
 
-    // Ligne 2 : libelle + dates en gras
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Espace ', 65, yPos);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('DEMO PUBLIC', 86, yPos);
+
+    doc.setFont('helvetica', 'normal');
+    doc.text('Edition demo', 118, yPos);
+
     const headerParts = [
-      { text: "Facture du ", bold: false },
+      { text: 'Facture du ', bold: false },
       { text: libelle, bold: true },
-      { text: " de ", bold: false },
+      { text: ' de ', bold: false },
       { text: dateFromFR, bold: true },
-      { text: " au ", bold: false },
+      { text: ' au ', bold: false },
       { text: dateToFR, bold: true },
     ];
 
     const totalWidth = headerParts.reduce((sum, part) => {
-      doc.setFont("helvetica", part.bold ? "bold" : "normal");
+      doc.setFont('helvetica', part.bold ? 'bold' : 'normal');
       return sum + doc.getTextWidth(part.text);
     }, 0);
 
@@ -111,57 +120,56 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
     const lineY = yPos + 7;
 
     headerParts.forEach((part) => {
-      doc.setFont("helvetica", part.bold ? "bold" : "normal");
+      doc.setFont('helvetica', part.bold ? 'bold' : 'normal');
       doc.setFontSize(11);
       doc.text(part.text, currentX, lineY);
       currentX += doc.getTextWidth(part.text);
     });
   };
 
-  const addFooter = (data) => {
+  const addFooter = () => {
     const pageHeight = doc.internal.pageSize.height;
     const pageWidth = doc.internal.pageSize.width;
     doc.setFontSize(10);
 
-    const prefix = "Espace ";
-    const boldPart = "DEMO PUBLIC";
-    const suffix = " - adresse de demonstration";
-    // Calcul pour centrer l'ensemble
+    const prefix = 'Espace ';
+    const boldPart = 'DEMO PUBLIC';
+    const suffix = ' - adresse de demonstration';
     const totalWidth = doc.getTextWidth(prefix + boldPart + suffix);
     let currentX = (pageWidth - totalWidth) / 2;
 
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.text(prefix, currentX, pageHeight - 10);
     currentX += doc.getTextWidth(prefix);
 
-    doc.setFont("helvetica", "bold");
+    doc.setFont('helvetica', 'bold');
     doc.text(boldPart, currentX, pageHeight - 10);
     currentX += doc.getTextWidth(boldPart);
 
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.text(suffix, currentX, pageHeight - 10);
   };
 
   const tableData = transactions.map((t) => [
     new Date(t.date).toLocaleDateString('fr-FR'),
-    t.libelle.toUpperCase(),
-    t.recette > 0 ? `${t.recette.toLocaleString()}\u00A0€` : '-',
-    t.depense > 0 ? `${t.depense.toLocaleString()}\u00A0€` : '-',
-    `${t.solde.toLocaleString()}\u00A0€`,
+    String(t.libelle || '').toUpperCase(),
+    Number(t.recette) > 0 ? formatAmountForPdf(t.recette) : '-',
+    Number(t.depense) > 0 ? formatAmountForPdf(t.depense) : '-',
+    formatAmountForPdf(t.solde),
   ]);
 
   const totalRow = [
     'TOTAL',
     '',
-    `${transactions.reduce((sum, t) => sum + (t.recette || 0), 0).toLocaleString()}\u00A0€`,
-    `${transactions.reduce((sum, t) => sum + (t.depense || 0), 0).toLocaleString()}\u00A0€`,
-    `${transactions[transactions.length - 1]?.solde.toLocaleString()}\u00A0€`,
+    formatAmountForPdf(transactions.reduce((sum, t) => sum + (Number(t.recette) || 0), 0)),
+    formatAmountForPdf(transactions.reduce((sum, t) => sum + (Number(t.depense) || 0), 0)),
+    formatAmountForPdf(transactions[transactions.length - 1]?.solde ?? 0),
   ];
 
   autoTable(doc, {
-    head: [['Date', 'Libellé', 'Recettes', 'Dépenses', 'Solde'].map( header=> header.toUpperCase())],
+    head: [['Date', 'Libelle', 'Recettes', 'Depenses', 'Solde'].map((header) => header.toUpperCase())],
     body: [...tableData, totalRow],
-    startY: 25, // Leave space for the header
+    startY: 25,
     styles: {
       fontSize: 9,
     },
@@ -171,12 +179,11 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
       4: { halign: 'right', cellWidth: 32, minCellWidth: 32 },
     },
     headStyles: {
-      fillColor: [26, 26, 26], // Noir en RGB
-      textColor: [255, 255, 255], // Texte en blanc pour le contraste
+      fillColor: [26, 26, 26],
+      textColor: [255, 255, 255],
       fontStyle: 'bold',
     },
-    margin: { top: 25, bottom: 25 }, // Ensure space for header and footer
-    
+    margin: { top: 25, bottom: 25 },
     didParseCell: (data) => {
       const isTotalRow = data.row.index === tableData.length;
       if (isTotalRow) {
@@ -188,15 +195,13 @@ function exportPDF(transactions, libelle, dateFrom, dateTo) {
         }
       }
     },
-
-    didDrawPage: (data) => {
+    didDrawPage: () => {
       addHeader();
-      addFooter(data);
+      addFooter();
     },
   });
 
-  doc.save(`facture - ${libelle} - ${ dateFrom } ${dateTo}.pdf`);
+  doc.save(`facture - ${libelle} - ${dateFrom} ${dateTo}.pdf`);
 }
 
 export default exportPDF;
-
