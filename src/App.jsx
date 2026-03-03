@@ -12,7 +12,6 @@ import {
 
 function App() {
   const app_title = import.meta.env.VITE_APP_TITLE;
-  const isDemoPublic = true;
   const adminEmails = (import.meta.env.VITE_ADMIN_EMAILS || "")
     .split(",")
     .map((email) => email.trim().toLowerCase())
@@ -321,8 +320,8 @@ function App() {
   const handlePasswordUpdate = async (event) => {
     event.preventDefault();
 
-    if (isDemoPublic) {
-      toast("Ceci est une version démo, vous ne pouvez pas changer les identifiants😂.");
+    if (!isAdmin) {
+      toast.error("Action reservee aux administrateurs.");
       return;
     }
 
@@ -581,9 +580,9 @@ function App() {
                             type="button"
                             role="menuitem"
                             onClick={openAccountModal}
-                            disabled={isDemoPublic}
+                            disabled={!isAdmin}
                             className={`flex w-full items-center gap-2 px-4 py-2 text-left transition-colors ${
-                              isDemoPublic
+                              !isAdmin
                                 ? "opacity-50 cursor-not-allowed"
                                 : "hover:bg-slate-700 hover:cursor-pointer"
                             }`}
@@ -796,7 +795,7 @@ function App() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase text-emerald-600 mb-1">
-                      Recette (&euro;)
+                      Recette (Ar)
                     </label>
 
                     <input
@@ -811,7 +810,7 @@ function App() {
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase text-rose-600 mb-1">
-                      Depense (&euro;)
+                      Depense (Ar)
                     </label>
                     <input
                       type="number"
@@ -1099,16 +1098,16 @@ function App() {
                           </td>
                           <td className="px-6 py-4 text-right text-emerald-600 font-bold text-sm whitespace-nowrap">
                             {t.recette > 0
-                              ? `${t.recette.toLocaleString()} €`
+                              ? `${t.recette.toLocaleString()} Ar`
                               : "-"}
                           </td>
                           <td className="px-6 py-4 text-right text-rose-600 font-bold text-sm whitespace-nowrap">
                             {t.depense > 0
-                              ? `${t.depense.toLocaleString()} €`
+                              ? `${t.depense.toLocaleString()} Ar`
                               : "-"}
                           </td>
                           <td className="px-6 py-4 text-right font-black text-slate-900  text-sm">
-                            {t.solde.toLocaleString()} €
+                            {t.solde.toLocaleString()} Ar
                           </td>
                           {isAdmin && (
                             <td className="px-2">
@@ -1141,13 +1140,13 @@ function App() {
                           TOTAL
                         </td>
                         <td className="px-6 py-5 text-right text-emerald-400 bold">
-                          {transactions.totalRecettes.toLocaleString()} €
+                          {transactions.totalRecettes.toLocaleString()} Ar
                         </td>
                         <td className="px-6 py-5 text-right text-rose-400 bold">
-                          {transactions.totalDepenses.toLocaleString()} €
+                          {transactions.totalDepenses.toLocaleString()} Ar
                         </td>
                         <td className="px-6 py-5 text-right bold">
-                          {transactions.soldeFinal.toLocaleString()} €
+                          {transactions.soldeFinal.toLocaleString()} Ar
                         </td>
                         {isAdmin && (
                           <td className="px-6 py-5 text-right bold rounded-br"></td>
@@ -1270,9 +1269,7 @@ function App() {
                     Paramètre du compte
                   </h3>
                   <p className="text-sm">
-                    {isDemoPublic
-                      ? "Ceci est une version démo, vous ne pouvez pas changer les identifiants😂."
-                      : "Modifier votre mot de passe administrateur."}
+                    Modifier votre mot de passe administrateur.
                   </p>
                 </div>
                 <button
@@ -1463,18 +1460,14 @@ function App() {
                 </button>
                 <button
                   type="submit"
-                  disabled={isUpdatingPassword || isDemoPublic}
+                  disabled={isUpdatingPassword || !isAdmin}
                   className={`px-4 py-2 text-sm font-semibold text-white rounded ${
-                    isUpdatingPassword || isDemoPublic
+                    isUpdatingPassword || !isAdmin
                       ? "bg-blue-300 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700 hover:cursor-pointer"
                   }`}
                 >
-                  {isUpdatingPassword
-                    ? "Mise à jour..."
-                    : isDemoPublic
-                      ? "Version démo"
-                      : "Mettre à jour"}
+                  {isUpdatingPassword ? "Mise à jour..." : "Mettre à jour"}
                 </button>
               </div>
             </form>
