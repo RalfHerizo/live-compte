@@ -779,7 +779,7 @@ function App() {
                   )}
                   <input
                     type="text"
-                    minLength="3"
+                    minLength="2"
                     placeholder="ex: Vente de marchandise..."
                     value={formData.libelle}
                     onChange={(e) => {
