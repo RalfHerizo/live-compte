@@ -863,47 +863,59 @@ function App() {
                     <br /> */}
                     <div className="mx-3 md:mx-5">
                       <div className="flex flex-col gap-3 lg:grid lg:grid-cols-4 lg:items-center">
-                        <div className="flex flex-wrap items-center justify-start gap-2 text-xs text-slate-50 sm:text-sm lg:col-span-3">
-                          <span className="whitespace-nowrap">Facture du</span>
-                          <input
-                            type="text"
-                            placeholder="Libellé"
-                            value={printDetails.libelle}
-                            onChange={(e) => {
-                              setPrintDetails({
-                                ...printDetails,
-                                libelle: e.target.value,
-                              });
-                              if (exportErrors.general) setExportErrors({});
-                            }}
-                            className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none sm:w-40"
-                          />
-                          <span className="whitespace-nowrap">de</span>
-                          <input
-                            type="date"
-                            value={printDetails.dateFrom}
-                            onChange={(e) => {
-                              setPrintDetails({
-                                ...printDetails,
-                                dateFrom: e.target.value,
-                              });
-                              if (exportErrors.general) setExportErrors({});
-                            }}
-                            className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none sm:w-40"
-                          />
-                          <span className="whitespace-nowrap">au</span>
-                          <input
-                            type="date"
-                            value={printDetails.dateTo}
-                            onChange={(e) => {
-                              setPrintDetails({
-                                ...printDetails,
-                                dateTo: e.target.value,
-                              });
-                              if (exportErrors.general) setExportErrors({});
-                            }}
-                            className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none sm:w-40"
-                          />
+                        <div className="grid gap-2 text-xs text-slate-50 sm:grid-cols-3 sm:gap-3 lg:col-span-3">
+                          <div className="flex flex-col gap-1">
+                            <span className="whitespace-nowrap text-[11px] font-semibold">
+                              Nom de la facture
+                            </span>
+                            <input
+                              type="text"
+                              placeholder="Libellé"
+                              value={printDetails.libelle}
+                              onChange={(e) => {
+                                setPrintDetails({
+                                  ...printDetails,
+                                  libelle: e.target.value,
+                                });
+                                if (exportErrors.general) setExportErrors({});
+                              }}
+                              className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="whitespace-nowrap text-[11px] font-semibold">
+                              date de début
+                            </span>
+                            <input
+                              type="date"
+                              value={printDetails.dateFrom}
+                              onChange={(e) => {
+                                setPrintDetails({
+                                  ...printDetails,
+                                  dateFrom: e.target.value,
+                                });
+                                if (exportErrors.general) setExportErrors({});
+                              }}
+                              className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="whitespace-nowrap text-[11px] font-semibold">
+                              date de fin
+                            </span>
+                            <input
+                              type="date"
+                              value={printDetails.dateTo}
+                              onChange={(e) => {
+                                setPrintDetails({
+                                  ...printDetails,
+                                  dateTo: e.target.value,
+                                });
+                                if (exportErrors.general) setExportErrors({});
+                              }}
+                              className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none"
+                            />
+                          </div>
                         </div>
                         <div className="w-full">
                           <button
