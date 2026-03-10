@@ -862,10 +862,10 @@ function App() {
                     {/* Espace <strong className='uppercase'>DEMO PUBLIC</strong> Edition demo
                     <br /> */}
                     <div className="mx-3 md:mx-5">
-                      <div className="flex flex-col gap-3 lg:grid lg:grid-cols-4 lg:items-center">
+                      <div className="flex flex-col gap-3 lg:grid lg:grid-cols-4 lg:items-center ">
                         <div className="grid gap-2 text-xs text-slate-50 sm:grid-cols-3 sm:gap-3 lg:col-span-3">
                           <div className="flex flex-col gap-1">
-                            <span className="whitespace-nowrap text-[11px] font-semibold">
+                            <span className="text-left whitespace-nowrap  text-[11px] uppercase font-semibold">
                               Nom de la facture
                             </span>
                             <input
@@ -879,12 +879,12 @@ function App() {
                                 });
                                 if (exportErrors.general) setExportErrors({});
                               }}
-                              className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none"
+                              className="w-full rounded border-gray-400 bg-slate-100 p-2 text-center text-slate-900 outline-none text-md"
                             />
                           </div>
                           <div className="flex flex-col gap-1">
-                            <span className="whitespace-nowrap text-[11px] font-semibold">
-                              date de début
+                            <span className="text-left whitespace-nowrap  text-[11px] uppercase font-semibold">
+                              Date de début
                             </span>
                             <input
                               type="date"
@@ -896,11 +896,11 @@ function App() {
                                 });
                                 if (exportErrors.general) setExportErrors({});
                               }}
-                              className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none"
+                              className="w-full rounded border-gray-400 bg-slate-100 p-2 text-center text-slate-900 outline-none"
                             />
                           </div>
                           <div className="flex flex-col gap-1">
-                            <span className="whitespace-nowrap text-[11px] font-semibold">
+                            <span className="text-left whitespace-nowrap text-[11px] uppercase font-semibold">
                               date de fin
                             </span>
                             <input
@@ -913,14 +913,14 @@ function App() {
                                 });
                                 if (exportErrors.general) setExportErrors({});
                               }}
-                              className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none"
+                              className="w-full rounded border-gray-400 bg-slate-100 p-2 text-center text-slate-900 outline-none"
                             />
                           </div>
                         </div>
                         <div className="w-full">
                           <button
                             onClick={handleExportPDF}
-                            className="w-full rounded bg-blue-500 px-4 py-2.5 text-sm font-semibold text-slate-50 transition-all hover:cursor-pointer hover:bg-blue-600 sm:px-5"
+                            className="w-full rounded bg-blue-500 px-4 mt-3 py-2.5 text-sm font-semibold text-slate-50 transition-all hover:cursor-pointer hover:bg-blue-600 sm:px-5"
                           >
                             Exporter PDF
                           </button>
