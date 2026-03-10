@@ -1023,13 +1023,13 @@ function App() {
                         Libelle
                       </th>
                       <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">
-                        Recettes
+                        Recettes(Ar)
                       </th>
                       <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">
-                        Depenses
+                        Depenses(Ar)
                       </th>
                       <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">
-                        Solde
+                        Solde(Ar)
                       </th>
                       {isAdmin && (
                         <th className="sticky top-0 bg-slate-900 px-6 py-4 text-xs font-bold text-slate-50 uppercase tracking-wider text-right">
@@ -1109,17 +1109,13 @@ function App() {
                             {t.libelle.toUpperCase()}
                           </td>
                           <td className="px-6 py-4 text-right text-emerald-600 font-bold text-sm whitespace-nowrap">
-                            {t.recette > 0
-                              ? `${t.recette.toLocaleString()} Ar`
-                              : "-"}
+                            {t.recette > 0 ? t.recette.toLocaleString() : "-"}
                           </td>
                           <td className="px-6 py-4 text-right text-rose-600 font-bold text-sm whitespace-nowrap">
-                            {t.depense > 0
-                              ? `${t.depense.toLocaleString()} Ar`
-                              : "-"}
+                            {t.depense > 0 ? t.depense.toLocaleString() : "-"}
                           </td>
                           <td className="px-6 py-4 text-right font-black text-slate-900  text-sm">
-                            {t.solde.toLocaleString()} Ar
+                            {t.solde.toLocaleString()}
                           </td>
                           {isAdmin && (
                             <td className="px-2">
@@ -1149,16 +1145,16 @@ function App() {
                           colSpan={isAdmin ? 3 : 2}
                           className="rounded-bl px-6 py-5 text-sm bold"
                         >
-                          TOTAL
+                          TOTAL(Ar)
                         </td>
                         <td className="px-6 py-5 text-right text-emerald-400 bold">
-                          {transactions.totalRecettes.toLocaleString()} Ar
+                          {transactions.totalRecettes.toLocaleString()}
                         </td>
                         <td className="px-6 py-5 text-right text-rose-400 bold">
-                          {transactions.totalDepenses.toLocaleString()} Ar
+                          {transactions.totalDepenses.toLocaleString()}
                         </td>
                         <td className="px-6 py-5 text-right bold">
-                          {transactions.soldeFinal.toLocaleString()} Ar
+                          {transactions.soldeFinal.toLocaleString()}
                         </td>
                         {isAdmin && (
                           <td className="px-6 py-5 text-right bold rounded-br"></td>
