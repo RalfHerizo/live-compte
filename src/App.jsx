@@ -859,8 +859,6 @@ function App() {
               {isAdmin && (
                 <div className="print-only bg-slate-900 py-3">
                   <h2 className="text-center">
-                    {/* Espace <strong className='uppercase'>DEMO PUBLIC</strong> Edition demo
-                    <br /> */}
                     <div className="mx-3 md:mx-5">
                       <div className="flex flex-col gap-3 lg:grid lg:grid-cols-4 lg:items-center ">
                         <div className="grid gap-2 text-xs text-slate-50 sm:grid-cols-3 sm:gap-3 lg:col-span-3">
