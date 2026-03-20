@@ -860,56 +860,66 @@ function App() {
               {isAdmin && (
                 <div className="print-only bg-slate-900 py-3">
                   <h2 className="text-center">
-                    {/* Espace <strong className='uppercase'>DEMO PUBLIC</strong> Edition demo
-                    <br /> */}
                     <div className="mx-3 md:mx-5">
-                      <div className="flex flex-col gap-3 lg:grid lg:grid-cols-4 lg:items-center">
-                        <div className="flex flex-wrap items-center justify-start gap-2 text-xs text-slate-50 sm:text-sm lg:col-span-3">
-                          <span className="whitespace-nowrap">Facture du</span>
-                          <input
-                            type="text"
-                            placeholder="Libellé"
-                            value={printDetails.libelle}
-                            onChange={(e) => {
-                              setPrintDetails({
-                                ...printDetails,
-                                libelle: e.target.value,
-                              });
-                              if (exportErrors.general) setExportErrors({});
-                            }}
-                            className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none sm:w-40"
-                          />
-                          <span className="whitespace-nowrap">de</span>
-                          <input
-                            type="date"
-                            value={printDetails.dateFrom}
-                            onChange={(e) => {
-                              setPrintDetails({
-                                ...printDetails,
-                                dateFrom: e.target.value,
-                              });
-                              if (exportErrors.general) setExportErrors({});
-                            }}
-                            className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none sm:w-40"
-                          />
-                          <span className="whitespace-nowrap">au</span>
-                          <input
-                            type="date"
-                            value={printDetails.dateTo}
-                            onChange={(e) => {
-                              setPrintDetails({
-                                ...printDetails,
-                                dateTo: e.target.value,
-                              });
-                              if (exportErrors.general) setExportErrors({});
-                            }}
-                            className="w-full rounded border-gray-400 bg-slate-100 p-1 text-center text-slate-900 outline-none sm:w-40"
-                          />
+                      <div className="flex flex-col gap-3 lg:grid lg:grid-cols-4 lg:items-center ">
+                        <div className="grid gap-2 text-xs text-slate-50 sm:grid-cols-3 sm:gap-3 lg:col-span-3">
+                          <div className="flex flex-col gap-1">
+                            <span className="text-left whitespace-nowrap  text-[11px] uppercase font-semibold">
+                              Nom de la facture
+                            </span>
+                            <input
+                              type="text"
+                              placeholder="Libellé"
+                              value={printDetails.libelle}
+                              onChange={(e) => {
+                                setPrintDetails({
+                                  ...printDetails,
+                                  libelle: e.target.value,
+                                });
+                                if (exportErrors.general) setExportErrors({});
+                              }}
+                              className="w-full rounded border-gray-400 bg-slate-100 p-2 text-center text-slate-900 outline-none text-md"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-left whitespace-nowrap  text-[11px] uppercase font-semibold">
+                              Date de début
+                            </span>
+                            <input
+                              type="date"
+                              value={printDetails.dateFrom}
+                              onChange={(e) => {
+                                setPrintDetails({
+                                  ...printDetails,
+                                  dateFrom: e.target.value,
+                                });
+                                if (exportErrors.general) setExportErrors({});
+                              }}
+                              className="w-full rounded border-gray-400 bg-slate-100 p-2 text-center text-slate-900 outline-none"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-left whitespace-nowrap text-[11px] uppercase font-semibold">
+                              date de fin
+                            </span>
+                            <input
+                              type="date"
+                              value={printDetails.dateTo}
+                              onChange={(e) => {
+                                setPrintDetails({
+                                  ...printDetails,
+                                  dateTo: e.target.value,
+                                });
+                                if (exportErrors.general) setExportErrors({});
+                              }}
+                              className="w-full rounded border-gray-400 bg-slate-100 p-2 text-center text-slate-900 outline-none"
+                            />
+                          </div>
                         </div>
                         <div className="w-full">
                           <button
                             onClick={handleExportPDF}
-                            className="w-full rounded bg-blue-500 px-4 py-2.5 text-sm font-semibold text-slate-50 transition-all hover:cursor-pointer hover:bg-blue-600 sm:px-5"
+                            className="w-full rounded bg-blue-500 px-4 mt-3 py-2.5 text-sm font-semibold text-slate-50 transition-all hover:cursor-pointer hover:bg-blue-600 sm:px-5"
                           >
                             Exporter PDF
                           </button>
