@@ -66,7 +66,7 @@ export default function Login() {
                 onError={() => setLogoSrc(defaultLoginLogoUrl)}
                 alt="logo"
               />
-              Démo public
+              Raoelison Compte
             </div>
 
             <h1 className="mb-2 text-2xl font-bold leading-tight tracking-tight text-gray-900">
